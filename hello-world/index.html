@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World - Hot Coral</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --text-color: #666;
+            --toggle-bg: #ddd;
+            --toggle-thumb: #fff;
+        }
+        
+        [data-theme="dark"] {
+            --bg-gradient-start: #2c3e50;
+            --bg-gradient-end: #34495e;
+            --text-color: #bbb;
+            --toggle-bg: #4a4a4a;
+            --toggle-thumb: #fff;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: background 0.3s ease;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .hello-world {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #FF6B6B;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .monzo-logo {
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .monzo-logo img {
+            width: 120px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .subtitle {
+            color: var(--text-color);
+            font-size: 1.2rem;
+            margin-top: 1rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+        
+        .dark-mode-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            z-index: 1000;
+            text-align: center;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 40px;
+            margin-bottom: 8px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--toggle-bg);
+            transition: .4s;
+            border-radius: 40px;
+            border: 2px solid rgba(255, 107, 107, 0.3);
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            left: 4px;
+            bottom: 2px;
+            background-color: var(--toggle-thumb);
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        input:checked + .slider {
+            background-color: #FF6B6B;
+            border-color: #FF6B6B;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+        
+        .toggle-label {
+            position: relative;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+            white-space: nowrap;
+        }
+        
+        .confetti {
+            position: fixed;
+            top: -20px;
+            width: 10px;
+            height: 10px;
+            background: #FF6B6B;
+            animation: confetti-fall 4s linear forwards;
+            pointer-events: none;
+            z-index: 999;
+        }
+        
+        .confetti:nth-child(odd) {
+            background: #4ECDC4;
+            width: 8px;
+            height: 8px;
+            animation-duration: 3.5s;
+        }
+        
+        .confetti:nth-child(3n) {
+            background: #45B7D1;
+            width: 6px;
+            height: 12px;
+            animation-duration: 4.5s;
+        }
+        
+        .confetti:nth-child(4n) {
+            background: #96CEB4;
+            width: 12px;
+            height: 6px;
+            animation-duration: 3.8s;
+        }
+        
+        .confetti:nth-child(5n) {
+            background: #FFEAA7;
+            border-radius: 50%;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dark-mode-toggle">
+        <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider"></span>
+        </label>
+        <div class="toggle-label">Dark Mode</div>
+    </div>
+    
+    <div class="container">
+        <h1 class="hello-world">Hello World</h1>
+        
+        <div class="monzo-logo">
+            <img src="monzo_logo.jpg" alt="Monzo Logo" />
+        </div>
+        
+        <p class="subtitle">Welcome to pb-sandbox</p>
+    </div>
+    
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the current theme
+        if (currentTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            darkModeToggle.checked = true;
+        }
+        
+        // Confetti animation function
+        function createConfetti() {
+            const confettiCount = 100;
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                
+                // Random positioning
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 0.1 + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Random size and shape
+                const size = Math.random() * 8 + 4;
+                confetti.style.width = size + 'px';
+                confetti.style.height = size + 'px';
+                
+                if (Math.random() > 0.5) {
+                    confetti.style.borderRadius = '50%';
+                }
+                
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+        
+        // Listen for toggle changes
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                // Trigger confetti animation only when switching to dark mode
+                createConfetti();
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App - Dynamic Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="weather-app" id="weatherApp">
+        <!-- Animated Background -->
+        <div class="background-animation" id="backgroundAnimation"></div>
+        
+        <!-- Main Content -->
+        <div class="container">
+            <!-- Header Controls -->
+            <header class="header">
+                <div class="city-selector">
+                    <label for="cityDropdown" class="city-label">Select City</label>
+                    <select id="cityDropdown" class="city-dropdown">
+                        <option value="London">London</option>
+                        <option value="New York">New York</option>
+                        <option value="Tokyo">Tokyo</option>
+                        <option value="Singapore">Singapore</option>
+                        <option value="Sydney">Sydney</option>
+                        <option value="Buenos Aires">Buenos Aires</option>
+                        <option value="Mexico City">Mexico City</option>
+                        <option value="San Francisco">San Francisco</option>
+                    </select>
+                </div>
+                
+                <div class="temp-toggle">
+                    <span class="toggle-label">°F</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="tempToggle">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="toggle-label">°C</span>
+                </div>
+            </header>
+
+            <!-- Loading State -->
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Fetching weather data...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error" id="error" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <h3>Weather data unavailable</h3>
+                <p>Please check your connection and try again</p>
+                <button class="retry-btn" id="retryBtn">Retry</button>
+            </div>
+
+            <!-- Main Weather Display -->
+            <main class="weather-main" id="weatherMain" style="display: none;">
+                <!-- Current Weather -->
+                <div class="current-weather">
+                    <div class="weather-icon">
+                        <img id="weatherIcon" src="" alt="Weather condition">
+                    </div>
+                    
+                    <div class="temperature-display">
+                        <span class="temperature" id="temperature">--°</span>
+                        <span class="feels-like" id="feelsLike">Feels like --°</span>
+                    </div>
+                    
+                    <div class="weather-info">
+                        <h2 class="city-name" id="cityName">--</h2>
+                        <p class="weather-description" id="weatherDescription">--</p>
+                        <div class="weather-details">
+                            <div class="detail">
+                                <span class="detail-label">Humidity</span>
+                                <span class="detail-value" id="humidity">--%</span>
+                            </div>
+                            <div class="detail">
+                                <span class="detail-label">Wind</span>
+                                <span class="detail-value" id="windSpeed">-- mph</span>
+                            </div>
+                            <div class="detail">
+                                <span class="detail-label">Pressure</span>
+                                <span class="detail-value" id="pressure">-- hPa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Forecast Toggle -->
+                <div class="forecast-header">
+                    <button class="forecast-toggle" id="forecastToggle">
+                        <span>7-Day Forecast</span>
+                        <span class="toggle-arrow">▼</span>
+                    </button>
+                </div>
+
+                <!-- Weekly Forecast -->
+                <div class="forecast-container" id="forecastContainer">
+                    <div class="forecast-list" id="forecastList">
+                        <!-- Forecast items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

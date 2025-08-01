@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Todo List</h1>
+            <p class="subtitle">Stay organized and get things done</p>
+        </header>
+
+        <div class="todo-input-section">
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="todoInput" 
+                    placeholder="What needs to be done?" 
+                    maxlength="200"
+                    autocomplete="off"
+                >
+                <div class="input-meta">
+                    <select id="todoType" aria-label="Todo type">
+                        <option value="quick">🚀 Quick</option>
+                        <option value="deep">🧠 Deep Work</option>
+                        <option value="reading">📖 Reading</option>
+                        <option value="meeting">💬 Meeting</option>
+                        <option value="admin">📋 Admin</option>
+                        <option value="creative">🎨 Creative</option>
+                    </select>
+                    <input 
+                        type="date" 
+                        id="todoDueDate" 
+                        aria-label="Due date"
+                        title="Due date (optional)"
+                    >
+                </div>
+                <button id="addBtn" aria-label="Add todo">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+
+        <div class="todo-list-container">
+            <ul id="todoList" class="todo-list"></ul>
+            <div id="emptyState" class="empty-state">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M9 11l3 3 8-8"></path>
+                    <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c2.12 0 4.05.74 5.58 1.97"></path>
+                </svg>
+                <h3>No todos yet</h3>
+                <p>Add your first todo above to get started!</p>
+            </div>
+        </div>
+
+        <footer class="todo-footer">
+            <div class="todo-count">
+                <span id="todoCount">0</span> <span id="todoCountText">items left</span>
+            </div>
+            <button id="clearCompleted" class="clear-completed">Clear completed</button>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

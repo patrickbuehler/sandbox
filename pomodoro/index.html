@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pomodoro Timer - Stay Productive</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍅 Pomodoro Timer</h1>
+            <p class="subtitle">Stay focused, stay productive</p>
+        </header>
+
+        <main class="timer-container">
+            <div class="mode-selector">
+                <button class="mode-btn active" data-mode="work">Work</button>
+                <button class="mode-btn" data-mode="short-break">Short Break</button>
+                <button class="mode-btn" data-mode="long-break">Long Break</button>
+            </div>
+
+            <div class="timer-display">
+                <div class="time-circle">
+                    <svg class="progress-ring" width="300" height="300">
+                        <circle class="progress-ring-bg" cx="150" cy="150" r="140"></circle>
+                        <circle class="progress-ring-progress" cx="150" cy="150" r="140"></circle>
+                    </svg>
+                    <div class="time-text">
+                        <span id="minutes">25</span>:<span id="seconds">00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="start-pause-btn" class="control-btn primary">
+                    <span class="btn-text">Start</span>
+                </button>
+                <button id="reset-btn" class="control-btn secondary">
+                    <span class="btn-text">Reset</span>
+                </button>
+            </div>
+
+            <div class="session-info">
+                <div class="session-counter">
+                    <span class="label">Pomodoros Completed</span>
+                    <span id="session-count" class="count">0</span>
+                </div>
+                <div class="current-mode">
+                    <span class="label">Current Mode</span>
+                    <span id="current-mode" class="mode">Work Session</span>
+                </div>
+            </div>
+        </main>
+
+        <div class="settings">
+            <button id="settings-btn" class="settings-btn">⚙️ Settings</button>
+            <div id="settings-panel" class="settings-panel hidden">
+                <h3>Timer Settings</h3>
+                <div class="setting-group">
+                    <label for="work-duration">Work Duration (minutes)</label>
+                    <input type="number" id="work-duration" min="1" max="60" value="25">
+                </div>
+                <div class="setting-group">
+                    <label for="short-break-duration">Short Break (minutes)</label>
+                    <input type="number" id="short-break-duration" min="1" max="30" value="5">
+                </div>
+                <div class="setting-group">
+                    <label for="long-break-duration">Long Break (minutes)</label>
+                    <input type="number" id="long-break-duration" min="1" max="60" value="15">
+                </div>
+                <div class="setting-group">
+                    <label for="sound-enabled">
+                        <input type="checkbox" id="sound-enabled" checked>
+                        Enable Sound Notifications
+                    </label>
+                </div>
+                <button id="save-settings" class="control-btn primary">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
