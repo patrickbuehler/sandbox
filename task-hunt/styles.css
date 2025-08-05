@@ -1,0 +1,438 @@
+/* Task Hunt - Retro 8-bit Styling */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Press Start 2P', cursive;
+    background: linear-gradient(to bottom, #87ceeb 0%, #98fb98 100%);
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* Game Area Styling */
+#game-area {
+    height: 70vh;
+    position: relative;
+    background: linear-gradient(to bottom, 
+        #87ceeb 0%, 
+        #87ceeb 40%, 
+        #98fb98 60%, 
+        #228b22 100%);
+    border-bottom: 4px solid #333;
+    cursor: crosshair;
+    overflow: hidden;
+}
+
+#game-header {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    text-align: center;
+}
+
+#game-header h1 {
+    font-size: 24px;
+    color: #fff;
+    text-shadow: 2px 2px 0px #000;
+    margin-bottom: 10px;
+}
+
+#score-board {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    font-size: 10px;
+    color: #fff;
+    text-shadow: 1px 1px 0px #000;
+}
+
+#sky {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Task Duck Styling */
+.task-duck {
+    position: absolute;
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    border: 3px solid #333;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 10px;
+    color: #333;
+    cursor: crosshair;
+    z-index: 50;
+    transition: transform 0.1s ease;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+    min-width: 120px;
+    max-width: 250px;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.task-duck::before {
+    content: "🦆";
+    font-size: 12px;
+}
+
+.task-duck:hover {
+    transform: scale(1.1);
+    box-shadow: 3px 3px 0px rgba(0,0,0,0.4);
+}
+
+.task-duck.shot {
+    animation: shotAnimation 0.8s ease-out forwards;
+}
+
+@keyframes shotAnimation {
+    0% {
+        transform: scale(1.2) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.8) rotate(180deg);
+        opacity: 0.7;
+    }
+    100% {
+        transform: scale(0) rotate(360deg) translateY(200px);
+        opacity: 0;
+    }
+}
+
+/* Crosshair effect */
+#crosshair {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+#crosshair::before,
+#crosshair::after {
+    content: '';
+    position: absolute;
+    background: #ff0000;
+    box-shadow: 0 0 5px rgba(255,0,0,0.5);
+}
+
+#crosshair::before {
+    width: 2px;
+    height: 30px;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+}
+
+#crosshair::after {
+    width: 30px;
+    height: 2px;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+#game-area:hover #crosshair {
+    opacity: 1;
+}
+
+/* Control Panel Styling */
+#control-panel {
+    height: 30vh;
+    background: #2c3e50;
+    border-top: 4px solid #333;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#task-input-section {
+    background: #34495e;
+    padding: 15px;
+    border: 2px solid #333;
+    border-radius: 4px;
+}
+
+#input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+#task-input {
+    flex: 1;
+    padding: 10px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 4px;
+    color: #333;
+}
+
+#task-input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}
+
+#add-task-btn {
+    padding: 10px 15px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    background: linear-gradient(to bottom, #27ae60, #2ecc71);
+    color: #fff;
+    border: 2px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+#add-task-btn:hover {
+    background: linear-gradient(to bottom, #2ecc71, #27ae60);
+    transform: translateY(-1px);
+}
+
+#add-task-btn:active {
+    transform: translateY(1px);
+}
+
+/* Filter Section */
+#filter-section {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 8px;
+    background: #7f8c8d;
+    color: #fff;
+    border: 2px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.filter-btn:hover {
+    background: #95a5a6;
+    transform: translateY(-1px);
+}
+
+.filter-btn.active {
+    background: linear-gradient(to bottom, #e74c3c, #c0392b);
+    transform: translateY(1px);
+}
+
+/* Task List */
+#task-list-container {
+    flex: 1;
+    background: #34495e;
+    border: 2px solid #333;
+    border-radius: 4px;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+#task-list {
+    list-style: none;
+    max-height: 100%;
+}
+
+.task-item {
+    background: #ecf0f1;
+    margin-bottom: 8px;
+    padding: 10px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.task-item:hover {
+    background: #d5dbdb;
+    transform: translateX(2px);
+}
+
+.task-item.completed {
+    background: #95a5a6;
+    color: #7f8c8d;
+    text-decoration: line-through;
+}
+
+.task-item.completed .task-text {
+    opacity: 0.6;
+}
+
+.task-item .task-text {
+    flex: 1;
+    margin-right: 10px;
+    word-wrap: break-word;
+}
+
+.task-item .task-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.task-btn {
+    padding: 4px 8px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 6px;
+    border: 1px solid #333;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+}
+
+.edit-btn {
+    background: #3498db;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background: #2980b9;
+}
+
+.delete-btn {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.delete-btn:hover {
+    background: #c0392b;
+}
+
+.toggle-btn {
+    background: #27ae60;
+    color: #fff;
+}
+
+.toggle-btn:hover {
+    background: #2ecc71;
+}
+
+.task-item.completed .toggle-btn {
+    background: #f39c12;
+}
+
+.task-item.completed .toggle-btn:hover {
+    background: #e67e22;
+}
+
+/* Empty State */
+#empty-state {
+    text-align: center;
+    color: #95a5a6;
+    font-size: 8px;
+    padding: 20px;
+}
+
+/* Shot Overlay Effect */
+#shot-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shot-effect {
+    font-size: 48px;
+    animation: shotExplosion 0.5s ease-out;
+}
+
+@keyframes shotExplosion {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.editing {
+    background: #f1c40f !important;
+    color: #333 !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #game-header h1 {
+        font-size: 16px;
+    }
+    
+    .task-duck {
+        font-size: 8px;
+        padding: 6px 10px;
+        min-width: 100px;
+        max-width: 200px;
+    }
+    
+    #control-panel {
+        padding: 15px;
+    }
+    
+    #input-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    #add-task-btn {
+        width: 100%;
+    }
+}
+
+/* Scrollbar Styling */
+#task-list-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#task-list-container::-webkit-scrollbar-track {
+    background: #2c3e50;
+}
+
+#task-list-container::-webkit-scrollbar-thumb {
+    background: #7f8c8d;
+    border-radius: 4px;
+}
+
+#task-list-container::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}

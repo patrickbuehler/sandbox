@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Hunt - Gamified To-Do List</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Game Area (70-75% of screen) -->
+    <div id="game-area">
+        <div id="game-header">
+            <h1>🦆 TASK HUNT 🦆</h1>
+            <div id="score-board">
+                <span>Active: <span id="active-count">0</span></span>
+                <span>Completed: <span id="completed-count">0</span></span>
+            </div>
+        </div>
+        
+        <!-- Flying task ducks will be dynamically added here -->
+        <div id="sky">
+            <!-- Task ducks fly here -->
+        </div>
+        
+        <!-- Crosshair cursor indicator -->
+        <div id="crosshair"></div>
+    </div>
+
+    <!-- Control Panel (25-30% of screen) -->
+    <div id="control-panel">
+        <div id="task-input-section">
+            <div id="input-container">
+                <input type="text" id="task-input" placeholder="Enter a new task..." maxlength="50">
+                <button id="add-task-btn">ADD TASK</button>
+            </div>
+        </div>
+
+        <div id="filter-section">
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="active">ACTIVE</button>
+            <button class="filter-btn" data-filter="completed">COMPLETED</button>
+        </div>
+
+        <div id="task-list-container">
+            <ul id="task-list">
+                <!-- Tasks will be dynamically added here -->
+            </ul>
+            <div id="empty-state" class="hidden">
+                <p>🎯 No tasks yet! Add one above to start hunting!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shot effect overlay -->
+    <div id="shot-overlay" class="hidden">
+        <div class="shot-effect">💥</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
