@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>한국어 Trip Prep</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#4F46E5;--primary-light:#EEF2FF;--primary-dark:#3730A3;
+  --bg:#F1F5F9;--card:#fff;--text:#1E293B;--muted:#64748B;
+  --success:#10B981;--danger:#EF4444;--border:#E2E8F0;
+  --radius:16px;--radius-sm:10px;
+  --shadow:0 2px 8px rgba(0,0,0,.08);--shadow-lg:0 8px 24px rgba(0,0,0,.12);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;
+  background:var(--bg);color:var(--text);min-height:100vh;max-width:480px;margin:0 auto}
+
+/* HEADER */
+.hdr{background:var(--primary);color:#fff;padding:14px 18px;
+  display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 8px rgba(79,70,229,.3)}
+.hdr h1{font-size:17px;font-weight:700;flex:1}
+#backBtn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;
+  padding:4px 8px 4px 0;display:none;line-height:1}
+
+/* SCREENS */
+.screen{display:none;padding:18px}
+.screen.active{display:block}
+
+/* HOME */
+.home-hero{text-align:center;padding:28px 0 20px}
+.home-hero .flag{font-size:52px;display:block;margin-bottom:12px}
+.home-hero h2{font-size:24px;font-weight:800;margin-bottom:6px}
+.home-hero p{color:var(--muted);font-size:14px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+.mode-card{background:var(--card);border-radius:var(--radius);padding:22px 14px;
+  text-align:center;cursor:pointer;box-shadow:var(--shadow);border:2px solid transparent;
+  transition:all .2s;-webkit-tap-highlight-color:transparent;user-select:none}
+.mode-card:active{border-color:var(--primary);transform:scale(.97)}
+.mode-icon{font-size:34px;display:block;margin-bottom:10px}
+.mode-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.mode-desc{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* SHARED BUTTONS */
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);
+  font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;
+  -webkit-tap-highlight-color:transparent}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-success{background:var(--success);color:#fff}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-outline{background:var(--card);color:var(--primary);border:2px solid var(--primary)}
+.btn:active{transform:scale(.97)}
+.btn-row{display:flex;gap:12px}
+.btn-row .btn{flex:1}
+
+/* FLASHCARDS */
+.fc-stats{display:flex;gap:10px;margin-bottom:18px}
+.stat-box{flex:1;background:var(--card);border-radius:var(--radius-sm);
+  padding:12px 8px;text-align:center;box-shadow:var(--shadow)}
+.stat-num{font-size:22px;font-weight:700}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.stat-num.blue{color:var(--primary)}
+.stat-num.green{color:var(--success)}
+.stat-num.red{color:var(--danger)}
+
+.fc-wrap{perspective:1000px;height:240px;margin-bottom:14px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .45s}
+.fc-inner.flipped{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;background:var(--card);border-radius:var(--radius);
+  box-shadow:var(--shadow-lg);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:28px 22px;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.fc-face.back{transform:rotateY(180deg);background:var(--primary-light)}
+.fc-ko{font-size:34px;font-weight:700;text-align:center;margin-bottom:8px}
+.fc-rom{font-size:15px;color:var(--muted);font-style:italic}
+.fc-hint{font-size:12px;color:#94A3B8;margin-top:10px}
+.fc-en{font-size:22px;font-weight:700;color:var(--primary-dark);text-align:center;margin-bottom:6px}
+.fc-tip{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;font-style:italic}
+.flip-hint{text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px}
+
+/* RESULTS CARD */
+.result-card{background:var(--card);border-radius:var(--radius);padding:32px 24px;
+  text-align:center;box-shadow:var(--shadow-lg);margin-bottom:18px}
+.result-emoji{font-size:56px;display:block;margin-bottom:14px}
+.result-title{font-size:22px;font-weight:700;margin-bottom:8px}
+.result-score{font-size:48px;font-weight:800;color:var(--primary);margin:14px 0}
+.result-msg{color:var(--muted);font-size:14px}
+
+/* PHRASE BOOK */
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{flex:1;padding:10px 6px;border:2px solid var(--border);background:var(--card);
+  border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;text-align:center;transition:all .15s}
+.tab.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.phrase-list{display:flex;flex-direction:column;gap:10px}
+.phrase-entry{background:var(--card);border-radius:var(--radius-sm);padding:14px 16px;
+  box-shadow:var(--shadow)}
+.p-ko{font-size:19px;font-weight:700;margin-bottom:3px}
+.p-rom{font-size:13px;color:var(--primary);font-style:italic;margin-bottom:3px}
+.p-en{font-size:14px;color:var(--muted)}
+.p-tip{font-size:11px;color:#94A3B8;margin-top:5px;font-style:italic}
+
+/* CHAT */
+.chat-setup{background:var(--card);border-radius:var(--radius);padding:16px;
+  margin-bottom:14px;box-shadow:var(--shadow)}
+.chat-setup label{display:block;font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.chat-setup input,.chat-setup select{width:100%;padding:10px 12px;
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;
+  color:var(--text);background:#fff;margin-bottom:12px;outline:none}
+.chat-setup input:focus,.chat-setup select:focus{border-color:var(--primary)}
+.key-note{font-size:11px;color:var(--muted);margin-top:-8px;margin-bottom:12px}
+.chat-msgs{min-height:280px;max-height:360px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:10px;padding:4px 0;margin-bottom:12px}
+.msg{max-width:88%;padding:11px 14px;border-radius:16px;line-height:1.5;font-size:14px}
+.msg.ai{background:var(--card);align-self:flex-start;box-shadow:var(--shadow);
+  border-bottom-left-radius:4px}
+.msg.user{background:var(--primary);color:#fff;align-self:flex-end;
+  border-bottom-right-radius:4px}
+.msg-ko{font-size:16px;font-weight:600;margin-bottom:3px}
+.msg-rom{font-size:12px;color:var(--primary);font-style:italic;margin-bottom:2px}
+.msg-en{font-size:12px;color:var(--muted)}
+.msg-corr{margin-top:7px;padding:7px 9px;background:#FEF3C7;border-radius:6px;
+  font-size:11px;color:#92400E}
+.chat-input-row{display:flex;gap:8px;align-items:center}
+.chat-input-row input{flex:1;padding:12px 16px;border:2px solid var(--border);
+  border-radius:24px;font-size:15px;outline:none;background:var(--card)}
+.chat-input-row input:focus{border-color:var(--primary)}
+.send-btn{width:46px;height:46px;background:var(--primary);border:none;border-radius:50%;
+  color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0}
+.typing{display:flex;align-items:center;gap:4px;padding:11px 14px;
+  background:var(--card);border-radius:16px;width:fit-content;box-shadow:var(--shadow)}
+.dot{width:7px;height:7px;background:var(--muted);border-radius:50%;animation:bounce 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+.chat-footer{margin-top:10px;display:flex;gap:8px}
+.btn-sm{padding:9px 16px;font-size:13px;width:auto}
+
+/* QUIZ */
+.mode-toggle{display:flex;gap:8px;margin-bottom:16px}
+.tog-btn{flex:1;padding:10px;border:2px solid var(--border);background:var(--card);
+  border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:all .15s}
+.tog-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
+.quiz-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.quiz-prog{font-size:13px;color:var(--muted)}
+.quiz-badge{background:var(--primary-light);color:var(--primary);
+  padding:5px 14px;border-radius:20px;font-size:13px;font-weight:700}
+.quiz-card{background:var(--card);border-radius:var(--radius);padding:28px 20px;
+  text-align:center;box-shadow:var(--shadow-lg);margin-bottom:20px;min-height:110px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center}
+.q-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);margin-bottom:10px}
+.q-text{font-size:26px;font-weight:700;margin-bottom:5px}
+.q-sub{font-size:14px;color:var(--muted);font-style:italic}
+.quiz-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.q-opt{background:var(--card);border:2px solid var(--border);border-radius:var(--radius-sm);
+  padding:14px 16px;text-align:left;cursor:pointer;transition:all .15s;
+  font-size:15px;font-weight:500;color:var(--text);width:100%}
+.q-opt:hover{border-color:var(--primary)}
+.q-opt .opt-rom{font-size:11px;color:var(--muted);font-style:italic;margin-top:2px}
+.q-opt.correct{background:#D1FAE5;border-color:var(--success);color:#065F46}
+.q-opt.wrong{background:#FEE2E2;border-color:var(--danger);color:#991B1B}
+.q-opt.correct .opt-rom,.q-opt.wrong .opt-rom{color:inherit;opacity:.7}
+
+/* MATCHING */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.m-item{background:var(--card);border:2px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 8px;text-align:center;cursor:pointer;transition:all .2s;
+  min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.m-item .m-ko{font-size:13px;font-weight:600}
+.m-item .m-rom{font-size:10px;color:var(--muted);font-style:italic;margin-top:2px}
+.m-item .m-en{font-size:12px;font-weight:500}
+.m-item.sel{border-color:var(--primary);background:var(--primary-light)}
+.m-item.matched{background:#D1FAE5;border-color:var(--success);color:#065F46;cursor:default}
+.m-item.matched .m-rom{color:#065F46;opacity:.7}
+.m-item.flash-wrong{background:#FEE2E2;border-color:var(--danger)}
+
+/* UTILS */
+.hidden{display:none!important}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <button id="backBtn" onclick="goHome()">&#8592;</button>
+  <h1 id="hdrTitle">한국어 Trip Prep</h1>
+</header>
+
+<!-- HOME -->
+<div id="homeScreen" class="screen active">
+  <div class="home-hero">
+    <span class="flag">🇰🇷</span>
+    <h2>Korea Trip Prep</h2>
+    <p>Survival Korean for your upcoming trip</p>
+  </div>
+  <div class="mode-grid">
+    <div class="mode-card" onclick="showScreen('flashcards')">
+      <span class="mode-icon">🃏</span>
+      <div class="mode-title">Flashcards</div>
+      <div class="mode-desc">Drill vocabulary with session tracking</div>
+    </div>
+    <div class="mode-card" onclick="showScreen('phrasebook')">
+      <span class="mode-icon">📖</span>
+      <div class="mode-title">Phrase Book</div>
+      <div class="mode-desc">Quick reference by category</div>
+    </div>
+    <div class="mode-card" onclick="showScreen('chat')">
+      <span class="mode-icon">💬</span>
+      <div class="mode-title">Practice Chat</div>
+      <div class="mode-desc">Roleplay ordering food &amp; more</div>
+    </div>
+    <div class="mode-card" onclick="showScreen('quiz')">
+      <span class="mode-icon">🎯</span>
+      <div class="mode-title">Quiz</div>
+      <div class="mode-desc">Multiple choice &amp; matching game</div>
+    </div>
+  </div>
+</div>
+
+<!-- FLASHCARDS -->
+<div id="flashcardsScreen" class="screen">
+  <div class="fc-stats">
+    <div class="stat-box"><div class="stat-num blue" id="fcLeft">0</div><div class="stat-label">Left</div></div>
+    <div class="stat-box"><div class="stat-num green" id="fcGot">0</div><div class="stat-label">Got it</div></div>
+    <div class="stat-box"><div class="stat-num red" id="fcAgain">0</div><div class="stat-label">Again</div></div>
+  </div>
+  <div class="fc-wrap" id="fcWrap" onclick="fcFlip()">
+    <div class="fc-inner" id="fcInner">
+      <div class="fc-face front">
+        <div class="fc-ko" id="fcKo"></div>
+        <div class="fc-rom" id="fcRom"></div>
+        <div class="fc-hint">Tap to reveal</div>
+      </div>
+      <div class="fc-face back">
+        <div class="fc-en" id="fcEn"></div>
+        <div class="fc-ko" id="fcKoBack" style="font-size:22px;margin-top:6px"></div>
+        <div class="fc-rom" id="fcRomBack"></div>
+        <div class="fc-tip" id="fcTip"></div>
+      </div>
+    </div>
+  </div>
+  <p class="flip-hint" id="flipHint">Tap card to flip</p>
+  <div class="btn-row hidden" id="fcBtns">
+    <button class="btn btn-danger" onclick="fcMark(false)">✗ Again</button>
+    <button class="btn btn-success" onclick="fcMark(true)">✓ Got it</button>
+  </div>
+  <div class="hidden" id="fcDone">
+    <div class="result-card">
+      <span class="result-emoji">🎉</span>
+      <div class="result-title">Session Complete!</div>
+      <div class="result-score" id="fcScore"></div>
+      <div class="result-msg" id="fcMsg"></div>
+    </div>
+    <button class="btn btn-primary" onclick="fcStart()">Restart</button>
+  </div>
+</div>
+
+<!-- PHRASE BOOK -->
+<div id="phrasebookScreen" class="screen">
+  <div class="tabs">
+    <div class="tab active" onclick="pbFilter('all',this)">All</div>
+    <div class="tab" onclick="pbFilter('survival',this)">Survival</div>
+    <div class="tab" onclick="pbFilter('food',this)">Food</div>
+  </div>
+  <div class="phrase-list" id="phraseList"></div>
+</div>
+
+<!-- CHAT -->
+<div id="chatScreen" class="screen">
+  <div id="chatSetup">
+    <div class="chat-setup">
+      <label>Anthropic API Key</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-api03-..." autocomplete="off">
+      <p class="key-note">Used locally only — never leaves your browser</p>
+      <label>Scenario</label>
+      <select id="scenario">
+        <option value="restaurant">At a restaurant (ordering food)</option>
+        <option value="street_food">Street food stall (Myeongdong)</option>
+        <option value="allergy">Explaining a dietary restriction</option>
+        <option value="convenience">Convenience store (편의점)</option>
+      </select>
+      <button class="btn btn-primary" onclick="chatStart()">Start Conversation</button>
+    </div>
+  </div>
+  <div class="hidden" id="chatActive">
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatIn" placeholder="Type in English or 한국어…"
+        onkeydown="if(event.key==='Enter')chatSend()">
+      <button class="send-btn" onclick="chatSend()">&#10148;</button>
+    </div>
+    <div class="chat-footer">
+      <button class="btn btn-outline btn-sm" onclick="chatReset()">&#8592; New Scenario</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quizScreen" class="screen">
+  <div class="mode-toggle">
+    <button class="tog-btn active" id="togMC" onclick="quizMode('mc')">Multiple Choice</button>
+    <button class="tog-btn" id="togMatch" onclick="quizMode('match')">Matching</button>
+  </div>
+
+  <!-- Multiple choice -->
+  <div id="mcSection">
+    <div class="quiz-hdr">
+      <div class="quiz-prog" id="mcProg">Question 1 of 10</div>
+      <div class="quiz-badge" id="mcBadge">0 pts</div>
+    </div>
+    <div class="quiz-card" id="mcCard">
+      <div class="q-label" id="qLabel"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-sub" id="qSub"></div>
+    </div>
+    <div class="quiz-opts" id="qOpts"></div>
+    <div class="hidden" id="mcDone">
+      <div class="result-card">
+        <span class="result-emoji" id="mcEmoji">🎉</span>
+        <div class="result-title">Quiz Complete!</div>
+        <div class="result-score" id="mcScore"></div>
+        <div class="result-msg" id="mcMsg"></div>
+      </div>
+      <button class="btn btn-primary" onclick="mcStart()">Play Again</button>
+    </div>
+  </div>
+
+  <!-- Matching -->
+  <div class="hidden" id="matchSection">
+    <div class="quiz-hdr">
+      <div class="quiz-prog">Match all pairs</div>
+      <div class="quiz-badge" id="matchBadge">0 / 5</div>
+    </div>
+    <div class="match-grid">
+      <div class="match-col" id="matchKo"></div>
+      <div class="match-col" id="matchEn"></div>
+    </div>
+    <div class="hidden" id="matchDone" style="margin-top:16px">
+      <div class="result-card">
+        <span class="result-emoji">⭐</span>
+        <div class="result-title">All matched!</div>
+        <div class="result-score">5 / 5</div>
+      </div>
+      <button class="btn btn-primary" onclick="matchStart()">Play Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── VOCABULARY ────────────────────────────────────────────────────────────
+const vocab = [
+  // SURVIVAL
+  {id:1, cat:'survival', ko:'안녕하세요',        rom:'Annyeonghaseyo',             en:'Hello',                          tip:'Formal; use any time of day'},
+  {id:2, cat:'survival', ko:'감사합니다',        rom:'Gamsahamnida',               en:'Thank you (formal)',             tip:'More formal than 고마워요'},
+  {id:3, cat:'survival', ko:'죄송합니다',        rom:'Joesonghamnida',             en:"I'm sorry / Excuse me",          tip:'Formal apology'},
+  {id:4, cat:'survival', ko:'괜찮아요',          rom:'Gwaenchanayo',               en:"It's okay / No problem",         tip:''},
+  {id:5, cat:'survival', ko:'네',               rom:'Ne',                         en:'Yes',                            tip:''},
+  {id:6, cat:'survival', ko:'아니요',            rom:'Aniyo',                      en:'No',                             tip:''},
+  {id:7, cat:'survival', ko:'영어 할 줄 아세요?', rom:'Yeongeo hal jul aseyo?',     en:'Do you speak English?',          tip:''},
+  {id:8, cat:'survival', ko:'얼마예요?',          rom:'Eolmayeyo?',                 en:'How much is it?',                tip:''},
+  {id:9, cat:'survival', ko:'화장실이 어디예요?', rom:'Hwajangsil-i eodiyeyo?',     en:'Where is the bathroom?',         tip:'화장실 = bathroom'},
+  {id:10,cat:'survival', ko:'도와주세요',         rom:'Dowajuseyo',                 en:'Please help me',                 tip:''},
+  {id:11,cat:'survival', ko:'천천히 말해주세요',  rom:'Cheoncheonhi malhaejuseyo',  en:'Please speak slowly',            tip:''},
+  {id:12,cat:'survival', ko:'다시 말해주세요',    rom:'Dasi malhaejuseyo',          en:'Please say that again',          tip:''},
+  {id:13,cat:'survival', ko:'모르겠어요',         rom:'Moreugesseoyo',              en:"I don't understand",             tip:''},
+  {id:14,cat:'survival', ko:'잠깐만요',           rom:'Jamkkanmanyo',               en:'Just a moment',                  tip:''},
+  {id:15,cat:'survival', ko:'어디예요?',          rom:'Eodiyeyo?',                  en:'Where is it?',                   tip:''},
+  // FOOD
+  {id:16,cat:'food', ko:'메뉴 주세요',           rom:'Menyu juseyo',               en:'Menu please',                    tip:''},
+  {id:17,cat:'food', ko:'이거 주세요',           rom:'Igeo juseyo',                en:"I'll have this",                 tip:'Point at the menu item'},
+  {id:18,cat:'food', ko:'맛있어요',              rom:'Massisseoyo',                en:"It's delicious",                 tip:'Great to say to your host!'},
+  {id:19,cat:'food', ko:'물 주세요',             rom:'Mul juseyo',                 en:'Water please',                   tip:'Water is usually free in Korea'},
+  {id:20,cat:'food', ko:'계산해 주세요',         rom:'Gyesan-hae juseyo',          en:'Bill / Check please',            tip:'Or just say 계산요 at the counter'},
+  {id:21,cat:'food', ko:'포장해 주세요',         rom:'Pojanghae juseyo',           en:'To go please',                   tip:'포장 = packaging/takeout'},
+  {id:22,cat:'food', ko:'알레르기가 있어요',      rom:'Allereugi-ga isseoyo',       en:'I have an allergy',              tip:'Add allergen: 견과류 (nuts), 유제품 (dairy)'},
+  {id:23,cat:'food', ko:'매워요?',               rom:'Maewoyo?',                   en:'Is it spicy?',                   tip:''},
+  {id:24,cat:'food', ko:'덜 맵게 해주세요',      rom:'Deol maepge haejuseyo',      en:'Please make it less spicy',      tip:''},
+  {id:25,cat:'food', ko:'채식주의자예요',         rom:'Chaeshikjuuijayeyo',         en:"I'm vegetarian",                 tip:''},
+  {id:26,cat:'food', ko:'자리 있어요?',          rom:'Jari isseoyo?',              en:'Is there a table available?',    tip:''},
+  {id:27,cat:'food', ko:'예약했어요',            rom:'Yeyakhaesseoyo',             en:'I have a reservation',           tip:''},
+  {id:28,cat:'food', ko:'반찬 더 주세요',        rom:'Banchan deo juseyo',         en:'More side dishes please',        tip:'Banchan = free refillable sides'},
+  {id:29,cat:'food', ko:'맥주 한 잔 주세요',     rom:'Maekju han jan juseyo',      en:'One glass of beer please',       tip:''},
+  {id:30,cat:'food', ko:'소주 주세요',           rom:'Soju juseyo',                en:'Soju please',                    tip:"Korea's famous rice liquor"},
+  {id:31,cat:'food', ko:'추천해 주세요',         rom:'Chucheonhae juseyo',         en:'Please recommend something',     tip:''},
+  {id:32,cat:'food', ko:'잘 먹겠습니다',         rom:'Jal meokgesseumnida',        en:'I will eat well (before meal)',  tip:'Said before eating — like bon appétit'},
+  {id:33,cat:'food', ko:'잘 먹었습니다',         rom:'Jal meogeosseumnida',        en:'I ate well (after meal)',        tip:'Said after finishing — thank the host'},
+  {id:34,cat:'food', ko:'여기요!',               rom:'Yeogiyo!',                   en:'Excuse me! (calling a server)',  tip:'Standard way to get a server\'s attention'},
+  {id:35,cat:'food', ko:'냉수 주세요',           rom:'Naengsu juseyo',             en:'Cold water please',              tip:''},
+  {id:36,cat:'food', ko:'맛없어요',              rom:'Masseopseoyo',               en:"It's not tasty",                 tip:'Probably avoid at restaurants!'},
+];
+
+// ─── NAVIGATION ────────────────────────────────────────────────────────────
+const titles = {home:'한국어 Trip Prep',flashcards:'Flashcards',
+  phrasebook:'Phrase Book',chat:'Conversational Practice',quiz:'Quiz'};
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(name + 'Screen').classList.add('active');
+  document.getElementById('backBtn').style.display = name === 'home' ? 'none' : 'block';
+  document.getElementById('hdrTitle').textContent = titles[name] || name;
+  if (name === 'flashcards' && !fc.started) fcStart();
+  if (name === 'phrasebook') pbRender('all');
+  if (name === 'quiz') { quizCurrentMode = 'mc'; mcStart(); }
+}
+function goHome() { showScreen('home'); }
+
+// ─── FLASHCARDS ─────────────────────────────────────────────────────────────
+const fc = {deck:[], current:null, got:0, again:0, flipped:false, started:false};
+
+function shuffle(a) {
+  a = [...a];
+  for (let i = a.length-1; i > 0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function fcStart() {
+  fc.deck = shuffle(vocab);
+  fc.got = 0; fc.again = 0; fc.flipped = false; fc.started = true;
+  document.getElementById('fcDone').classList.add('hidden');
+  document.getElementById('fcWrap').classList.remove('hidden');
+  document.getElementById('flipHint').classList.remove('hidden');
+  fcUpdateStats();
+  fcShow();
+}
+
+function fcUpdateStats() {
+  document.getElementById('fcLeft').textContent  = fc.deck.length;
+  document.getElementById('fcGot').textContent   = fc.got;
+  document.getElementById('fcAgain').textContent = fc.again;
+}
+
+function fcShow() {
+  if (!fc.deck.length) { fcDone(); return; }
+  fc.current = fc.deck[0];
+  fc.flipped = false;
+  document.getElementById('fcInner').classList.remove('flipped');
+  document.getElementById('fcKo').textContent      = fc.current.ko;
+  document.getElementById('fcRom').textContent     = fc.current.rom;
+  document.getElementById('fcEn').textContent      = fc.current.en;
+  document.getElementById('fcKoBack').textContent  = fc.current.ko;
+  document.getElementById('fcRomBack').textContent = fc.current.rom;
+  document.getElementById('fcTip').textContent     = fc.current.tip || '';
+  document.getElementById('fcBtns').classList.add('hidden');
+  fcUpdateStats();
+}
+
+function fcFlip() {
+  if (!fc.deck.length) return;
+  fc.flipped = !fc.flipped;
+  document.getElementById('fcInner').classList.toggle('flipped', fc.flipped);
+  if (fc.flipped) document.getElementById('fcBtns').classList.remove('hidden');
+}
+
+function fcMark(correct) {
+  fc.deck.shift();
+  if (correct) {
+    fc.got++;
+  } else {
+    fc.again++;
+    const pos = Math.min(fc.deck.length, Math.max(0, fc.deck.length - 2) + Math.floor(Math.random()*3));
+    fc.deck.splice(pos, 0, fc.current);
+  }
+  document.getElementById('fcInner').classList.remove('flipped');
+  document.getElementById('fcBtns').classList.add('hidden');
+  setTimeout(fcShow, 300);
+}
+
+function fcDone() {
+  document.getElementById('fcWrap').classList.add('hidden');
+  document.getElementById('flipHint').classList.add('hidden');
+  document.getElementById('fcBtns').classList.add('hidden');
+  document.getElementById('fcDone').classList.remove('hidden');
+  fc.started = false;
+  const total = vocab.length;
+  document.getElementById('fcScore').textContent = fc.got + ' / ' + total;
+  const pct = fc.got / total;
+  document.getElementById('fcMsg').textContent =
+    pct >= .9 ? 'Outstanding! You crushed it!' :
+    pct >= .7 ? 'Great work — keep it up!' :
+    pct >= .5 ? 'Good start! One more round will help.' :
+                'Keep practicing — it gets easier!';
+}
+
+// ─── PHRASE BOOK ────────────────────────────────────────────────────────────
+function pbRender(cat) {
+  const items = cat === 'all' ? vocab : vocab.filter(v => v.cat === cat);
+  document.getElementById('phraseList').innerHTML = items.map(v => `
+    <div class="phrase-entry">
+      <div class="p-ko">${v.ko}</div>
+      <div class="p-rom">${v.rom}</div>
+      <div class="p-en">${v.en}</div>
+      ${v.tip ? `<div class="p-tip">💡 ${v.tip}</div>` : ''}
+    </div>`).join('');
+}
+function pbFilter(cat, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  pbRender(cat);
+}
+
+// ─── CHAT ────────────────────────────────────────────────────────────────────
+const OPENERS = {
+  restaurant:  {ko:'어서 오세요! 몇 분이세요?',            rom:'Eoseo oseyo! Myeot bun-iseyo?',               en:'Welcome! How many people?'},
+  street_food: {ko:'어서 오세요! 뭐 드릴까요?',            rom:'Eoseo oseyo! Mwo deurilkkayo?',               en:'Welcome! What can I get you?'},
+  allergy:     {ko:'안녕하세요! 자리 안내해 드릴까요?',     rom:'Annyeonghaseyo! Jari annaehae deurilkkayo?',  en:'Hello! Shall I show you to your seat?'},
+  convenience: {ko:'어서 오세요!',                        rom:'Eoseo oseyo!',                                en:'Welcome!'},
+};
+const SCENE_DESC = {
+  restaurant:  'You are a friendly server at a sit-down Korean restaurant in Seoul.',
+  street_food: 'You are a street food vendor at a 떡볶이 stall in Myeongdong, Seoul.',
+  allergy:     'You are a restaurant host helping a tourist explain a dietary restriction.',
+  convenience: 'You are a cashier at a GS25 convenience store in Seoul.',
+};
+
+let chatHistory = [];
+let chatApiKey = '';
+let chatScenario = '';
+
+function chatStart() {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key) { alert('Please enter your Anthropic API key.'); return; }
+  chatApiKey = key;
+  localStorage.setItem('kr_api_key', key);
+  chatScenario = document.getElementById('scenario').value;
+  chatHistory = [];
+  document.getElementById('chatSetup').classList.add('hidden');
+  document.getElementById('chatActive').classList.remove('hidden');
+  const box = document.getElementById('chatMsgs');
+  box.innerHTML = '';
+  const o = OPENERS[chatScenario];
+  addMsg('ai', o.ko, o.rom, o.en, '');
+  chatHistory.push({role:'assistant', content: o.ko + '\n(' + o.rom + ')\n"' + o.en + '"'});
+}
+
+function chatReset() {
+  chatHistory = [];
+  document.getElementById('chatSetup').classList.remove('hidden');
+  document.getElementById('chatActive').classList.add('hidden');
+  document.getElementById('chatMsgs').innerHTML = '';
+}
+
+function addMsg(role, ko, rom, en, corr) {
+  const box = document.getElementById('chatMsgs');
+  const d = document.createElement('div');
+  d.className = 'msg ' + role;
+  if (role === 'ai') {
+    d.innerHTML =
+      '<div class="msg-ko">' + ko + '</div>' +
+      (rom ? '<div class="msg-rom">' + rom + '</div>' : '') +
+      (en  ? '<div class="msg-en">'  + en  + '</div>' : '') +
+      (corr && corr.toLowerCase() !== 'perfect!' ?
+        '<div class="msg-corr">📝 ' + corr + '</div>' : '');
+  } else {
+    d.textContent = ko;
+  }
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+
+function addTyping() {
+  const box = document.getElementById('chatMsgs');
+  const d = document.createElement('div');
+  d.id = 'typing'; d.className = 'typing';
+  d.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  box.appendChild(d); box.scrollTop = box.scrollHeight;
+}
+function removeTyping() { const e = document.getElementById('typing'); if(e) e.remove(); }
+
+async function chatSend() {
+  const inp = document.getElementById('chatIn');
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  addMsg('user', text, '', '', '');
+  chatHistory.push({role:'user', content: text});
+  addTyping();
+
+  const sys = SCENE_DESC[chatScenario] + `
+
+You are helping a tourist practice Korean. They know ~70% of Hangul and have basic vocab.
+
+Reply in EXACTLY this format (no extra text before or after):
+**Korean:** [your response in Hangul]
+**Romanization:** [romanization]
+**Translation:** [English meaning]
+**Correction:** [if user wrote Korean: note any errors, else write "n/a"]
+
+Keep responses short and conversational. Use polite 존댓말. Be warm and encouraging.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': chatApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 400,
+        system: sys,
+        messages: chatHistory,
+      }),
+    });
+    removeTyping();
+    if (!res.ok) {
+      const e = await res.json().catch(()=>({}));
+      addMsg('ai', 'API error: ' + (e.error?.message || res.status), '', '', '');
+      return;
+    }
+    const data = await res.json();
+    const raw = data.content[0].text;
+    chatHistory.push({role:'assistant', content: raw});
+    const g = k => { const m = raw.match(new RegExp('\\*\\*'+k+':\\*\\*\\s*([\\s\\S]*?)(?=\\*\\*|$)')); return m ? m[1].trim() : ''; };
+    const corr = g('Correction');
+    addMsg('ai', g('Korean'), g('Romanization'), g('Translation'),
+      corr && corr.toLowerCase() !== 'n/a' ? corr : '');
+  } catch(err) {
+    removeTyping();
+    addMsg('ai', 'Connection error — check your API key and try again.', '', '', '');
+  }
+}
+
+// ─── QUIZ – MULTIPLE CHOICE ─────────────────────────────────────────────────
+let mc = {qs:[], cur:0, score:0, answered:false};
+let quizCurrentMode = 'mc';
+
+function quizMode(mode) {
+  quizCurrentMode = mode;
+  document.getElementById('togMC').classList.toggle('active', mode==='mc');
+  document.getElementById('togMatch').classList.toggle('active', mode==='match');
+  document.getElementById('mcSection').classList.toggle('hidden', mode!=='mc');
+  document.getElementById('matchSection').classList.toggle('hidden', mode!=='match');
+  if (mode === 'mc') mcStart(); else matchStart();
+}
+
+function mcBuildQ(item) {
+  const koToEn = Math.random() > .5;
+  const wrong = shuffle(vocab.filter(v => v.id !== item.id)).slice(0, 3);
+  if (koToEn) {
+    return {
+      label: 'What does this mean?',
+      text: item.ko, sub: item.rom,
+      correctId: item.id,
+      opts: shuffle([
+        {id:item.id, text:item.en, rom:''},
+        ...wrong.map(w=>({id:w.id, text:w.en, rom:''}))
+      ])
+    };
+  } else {
+    return {
+      label: 'How do you say this in Korean?',
+      text: item.en, sub: '',
+      correctId: item.id,
+      opts: shuffle([
+        {id:item.id, text:item.ko, rom:item.rom},
+        ...wrong.map(w=>({id:w.id, text:w.ko, rom:w.rom}))
+      ])
+    };
+  }
+}
+
+function mcStart() {
+  mc.qs = shuffle(vocab).slice(0,10).map(mcBuildQ);
+  mc.cur = 0; mc.score = 0; mc.answered = false;
+  document.getElementById('mcDone').classList.add('hidden');
+  document.getElementById('mcCard').classList.remove('hidden');
+  document.getElementById('qOpts').classList.remove('hidden');
+  showQ();
+}
+
+function showQ() {
+  const q = mc.qs[mc.cur];
+  mc.answered = false;
+  document.getElementById('mcProg').textContent  = 'Question ' + (mc.cur+1) + ' of 10';
+  document.getElementById('mcBadge').textContent = mc.score + ' pts';
+  document.getElementById('qLabel').textContent  = q.label;
+  document.getElementById('qText').textContent   = q.text;
+  document.getElementById('qSub').textContent    = q.sub || '';
+  document.getElementById('qOpts').innerHTML = q.opts.map(o =>
+    `<button class="q-opt" data-id="${o.id}" onclick="checkQ(this,${q.correctId})">
+      ${o.text}
+      ${o.rom ? `<div class="opt-rom">${o.rom}</div>` : ''}
+    </button>`
+  ).join('');
+}
+
+function checkQ(btn, correctId) {
+  if (mc.answered) return;
+  mc.answered = true;
+  const sel = parseInt(btn.dataset.id);
+  if (sel === correctId) { btn.classList.add('correct'); mc.score++; }
+  else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.q-opt').forEach(b => {
+      if (parseInt(b.dataset.id) === correctId) b.classList.add('correct');
+    });
+  }
+  document.querySelectorAll('.q-opt').forEach(b => b.style.pointerEvents = 'none');
+  setTimeout(() => {
+    mc.cur++;
+    if (mc.cur >= 10) mcFinish(); else showQ();
+  }, 1200);
+}
+
+function mcFinish() {
+  document.getElementById('mcCard').classList.add('hidden');
+  document.getElementById('qOpts').classList.add('hidden');
+  document.getElementById('mcDone').classList.remove('hidden');
+  document.getElementById('mcScore').textContent = mc.score + ' / 10';
+  const e = mc.score>=9?'🏆':mc.score>=7?'🎉':mc.score>=5?'👍':'😅';
+  const m = mc.score>=9?'Near perfect!':mc.score>=7?'Great job!':mc.score>=5?'Getting there!':'Keep practicing!';
+  document.getElementById('mcEmoji').textContent = e;
+  document.getElementById('mcMsg').textContent   = m;
+  document.getElementById('mcBadge').textContent = mc.score + ' pts';
+}
+
+// ─── QUIZ – MATCHING ────────────────────────────────────────────────────────
+let match = {items:[], selKo:null, selEn:null, matched:0};
+
+function matchStart() {
+  match.items = shuffle(vocab).slice(0,5);
+  match.selKo = null; match.selEn = null; match.matched = 0;
+  document.getElementById('matchDone').classList.add('hidden');
+  document.getElementById('matchBadge').textContent = '0 / 5';
+  const enShuffled = shuffle([...match.items]);
+  document.getElementById('matchKo').innerHTML = match.items.map(v =>
+    `<div class="m-item" id="mko${v.id}" onclick="matchSel('ko',${v.id})">
+      <div class="m-ko">${v.ko}</div>
+      <div class="m-rom">${v.rom}</div>
+    </div>`).join('');
+  document.getElementById('matchEn').innerHTML = enShuffled.map(v =>
+    `<div class="m-item" id="men${v.id}" onclick="matchSel('en',${v.id})">
+      <div class="m-en">${v.en}</div>
+    </div>`).join('');
+}
+
+function matchSel(side, id) {
+  const el = document.getElementById((side==='ko'?'mko':'men') + id);
+  if (el.classList.contains('matched')) return;
+  if (side === 'ko') {
+    if (match.selKo !== null) document.getElementById('mko'+match.selKo)?.classList.remove('sel');
+    match.selKo = id; el.classList.add('sel');
+  } else {
+    if (match.selEn !== null) document.getElementById('men'+match.selEn)?.classList.remove('sel');
+    match.selEn = id; el.classList.add('sel');
+  }
+  if (match.selKo !== null && match.selEn !== null) {
+    const ko = document.getElementById('mko'+match.selKo);
+    const en = document.getElementById('men'+match.selEn);
+    if (match.selKo === match.selEn) {
+      ko.classList.remove('sel'); en.classList.remove('sel');
+      ko.classList.add('matched'); en.classList.add('matched');
+      match.matched++;
+      document.getElementById('matchBadge').textContent = match.matched + ' / 5';
+      match.selKo = null; match.selEn = null;
+      if (match.matched === 5) setTimeout(()=>document.getElementById('matchDone').classList.remove('hidden'), 400);
+    } else {
+      ko.classList.add('flash-wrong'); en.classList.add('flash-wrong');
+      setTimeout(() => {
+        ko.classList.remove('sel','flash-wrong');
+        en.classList.remove('sel','flash-wrong');
+        match.selKo = null; match.selEn = null;
+      }, 600);
+    }
+  }
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+const saved = localStorage.getItem('kr_api_key');
+if (saved) document.getElementById('apiKey').value = saved;
+showScreen('home');
+</script>
+</body>
+</html>
