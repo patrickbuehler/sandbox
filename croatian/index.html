@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Učimo hrvatski</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Literata:opsz,wght@7..72,500;7..72,600&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: a navy harbour-band header with a šahovnica checker mark, then one calm reading column of limestone and Adriatic blue. */
+:root{
+  --bg:#F3F6F5; --surface:#FFFFFF; --ink:#14263A; --muted:#5A6B76; --line:#DAE2E3;
+  --sea:#0A6C8A; --sea-soft:#E0EEF2; --red:#C8102E; --red-soft:#FBE7EA;
+  --good:#2C7A4B; --good-soft:#E2F1E7; --band:#14263A; --band-fg:#F3F6F5; --band-muted:#A9BAC4;
+  --f-display:"Literata", Georgia, "Times New Roman", serif;
+  --f-body:"Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1820; --surface:#13232D; --ink:#E6EEF0; --muted:#94A7B1; --line:#243946;
+    --sea:#5DB9D7; --sea-soft:#123241; --red:#F25A6E; --red-soft:#3B1A22;
+    --good:#5EC58B; --good-soft:#15301F; --band:#07121A; --band-fg:#E6EEF0; --band-muted:#8EA2AD;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1820; --surface:#13232D; --ink:#E6EEF0; --muted:#94A7B1; --line:#243946;
+  --sea:#5DB9D7; --sea-soft:#123241; --red:#F25A6E; --red-soft:#3B1A22;
+  --good:#5EC58B; --good-soft:#15301F; --band:#07121A; --band-fg:#E6EEF0; --band-muted:#8EA2AD;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--band)}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sea);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.15}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--band);color:var(--band-fg)}
+.top-in{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px 0}
+.brand{display:flex;align-items:center;gap:12px}
+.checker{width:30px;height:30px;flex:none;border-radius:5px;border:1.5px solid var(--band-fg);
+  background:repeating-conic-gradient(#FFFFFF 0 25%, #C8102E 0 50%) 0 0/12px 12px}
+.brand h1{font-size:23px}
+.brand small{display:block;color:var(--band-muted);font-size:13px;letter-spacing:.04em}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin-top:8px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{background:none;border:0;color:var(--band-muted);padding:10px 12px;font-weight:600;font-size:15px;border-bottom:3px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--band-fg)}
+.tab[aria-current="page"]{color:var(--band-fg);border-bottom-color:var(--red)}
+
+main{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+section{display:flex;flex-direction:column;gap:20px}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.muted{color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+
+/* buttons */
+.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:16px;background:var(--sea);color:var(--surface);transition:transform .1s, filter .15s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.45;cursor:default;transform:none;filter:none}
+.btn.ghost{background:transparent;color:var(--sea);border:1.5px solid var(--sea)}
+.btn.wide{width:100%}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.row>.btn{flex:1 1 140px}
+.speak{flex:none;width:40px;height:40px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--sea);display:inline-grid;place-items:center;padding:0}
+.speak:hover{border-color:var(--sea)}
+.speak svg{width:20px;height:20px}
+
+/* today */
+.hello h2{font-size:34px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 12px}
+.stat b{display:block;font-family:var(--f-display);font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.stat.hot b{color:var(--red)}
+.wotd{display:flex;gap:16px;align-items:center}
+.wotd .w{flex:1;min-width:0}
+.wotd .w strong{font-family:var(--f-display);font-weight:400;font-size:28px;display:block}
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.deck{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.deck:hover{border-color:var(--sea)}
+.deck .dn{font-family:var(--f-display);font-size:19px}
+.deck .de{font-size:14px;color:var(--muted)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sea);border-radius:3px}
+.deck .dc{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.switch{display:flex;align-items:center;gap:10px;font-size:15px}
+.switch input{width:20px;height:20px;accent-color:var(--sea)}
+
+/* review */
+.rv-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.chip{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--sea-soft);color:var(--sea)}
+.chip.new{background:var(--red-soft);color:var(--red)}
+.flash{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:36px 24px;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center}
+.f-front{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap}
+.f-word{font-family:var(--f-display);font-size:clamp(30px,7vw,46px);line-height:1.15;overflow-wrap:anywhere}
+.f-back{display:flex;flex-direction:column;gap:6px;align-items:center;border-top:1px dashed var(--line);padding-top:16px;width:100%}
+.f-ans{font-size:24px;font-weight:600}
+.f-note{color:var(--muted);font-size:15px;max-width:44ch}
+.rates{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.rate{border:1.5px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;font-weight:700}
+.rate small{font-weight:400;color:var(--muted);font-size:13px}
+.rate.again{border-color:var(--red);color:var(--red)}
+.rate.good{border-color:var(--sea);color:var(--sea)}
+.rate:hover{background:var(--sea-soft)}
+.rate.again:hover{background:var(--red-soft)}
+.keys{font-size:13px;color:var(--muted);text-align:center}
+.done{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;padding-block:28px}
+.done h2{font-size:38px}
+
+/* quiz */
+.field{display:flex;flex-direction:column;gap:6px;flex:1 1 180px;min-width:0}
+.field label{font-size:13px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+select,input[type="text"],input[type="search"]{width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface)}
+.qhead{display:flex;justify-content:space-between;align-items:center;font-variant-numeric:tabular-nums}
+.qprompt{font-family:var(--f-display);font-size:clamp(26px,6vw,38px);text-align:center;overflow-wrap:anywhere}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choice{text-align:left;padding:14px 16px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);font-size:17px}
+.choice:hover:not(:disabled){border-color:var(--sea)}
+.choice:disabled{cursor:default}
+.choice.right{border-color:var(--good);background:var(--good-soft);color:var(--good);font-weight:700}
+.choice.wrong{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+.fb{padding:12px 14px;border-radius:10px;font-weight:600}
+.fb.ok{background:var(--good-soft);color:var(--good)}
+.fb.bad{background:var(--red-soft);color:var(--red)}
+.fb.almost{background:var(--sea-soft);color:var(--sea)}
+.missed{display:flex;flex-direction:column;gap:8px;text-align:left;width:100%}
+.missed div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-block:6px}
+
+/* phrasebook */
+.group h3{font-size:22px;margin-bottom:8px}
+.phrase{display:flex;align-items:center;gap:14px;padding-block:12px;border-bottom:1px solid var(--line)}
+.phrase:last-child{border-bottom:0}
+.phrase .p{flex:1;min-width:0}
+.phrase .hr{font-family:var(--f-display);font-size:20px}
+.phrase .en{color:var(--ink)}
+.phrase .nt{color:var(--muted);font-size:14px}
+
+/* sounds */
+.abc{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.letter{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.letter:hover{border-color:var(--sea)}
+.letter .L{font-family:var(--f-display);font-size:30px;line-height:1}
+.letter.special .L{color:var(--red)}
+.letter .s{font-size:14px}
+.letter .ex{font-size:14px;color:var(--muted)}
+.letter .ex b{color:var(--ink);font-weight:600}
+.legend{font-size:14px;color:var(--muted)}
+.legend b{color:var(--red)}
+
+/* grammar */
+.prose{max-width:65ch}
+.prose p{margin:0 0 10px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+td.hr{font-family:var(--f-display)}
+.end{color:var(--red);font-weight:700}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:15px;max-width:calc(100% - 32px);z-index:20}
+
+@media (max-width:560px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .decks,.choices{grid-template-columns:1fr}
+  .rates{grid-template-columns:repeat(2,1fr)}
+  .hello h2{font-size:28px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <div class="checker" aria-hidden="true"></div>
+      <div><h1>Učimo hrvatski</h1><small>Let's learn Croatian</small></div>
+    </div>
+    <nav class="tabs" aria-label="Sections">
+      <button class="tab" data-v="today">Today</button>
+      <button class="tab" data-v="review">Flashcards</button>
+      <button class="tab" data-v="quiz">Quiz</button>
+      <button class="tab" data-v="phrases">Phrasebook</button>
+      <button class="tab" data-v="sounds">Sounds</button>
+      <button class="tab" data-v="grammar">Grammar</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- TODAY -->
+<section id="v-today">
+  <div class="hello">
+    <div class="eyebrow" id="dateLine"></div>
+    <h2 id="greet">Dobar dan!</h2>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="stDue">0</b><span>due for review</span></div>
+    <div class="stat"><b id="stNew">0</b><span>new words today</span></div>
+    <div class="stat"><b id="stSolid">0</b><span id="stSolidLbl">words solid</span></div>
+    <div class="stat hot"><b id="stStreak">0</b><span>day streak</span></div>
+  </div>
+  <button class="btn wide" id="startBtn">Start today's review</button>
+  <label class="switch"><input type="checkbox" id="enFirst"> Show English first (harder: you produce the Croatian)</label>
+
+  <div class="panel wotd">
+    <div class="w">
+      <div class="eyebrow">Riječ dana · word of the day</div>
+      <strong id="wHr"></strong>
+      <div id="wEn"></div>
+      <div class="muted" id="wNote"></div>
+    </div>
+    <button class="speak" id="wSpeak" aria-label="Hear it"></button>
+  </div>
+
+  <div>
+    <div class="eyebrow" style="margin-bottom:10px">Decks · tap one to study just that topic</div>
+    <div class="decks" id="deckList"></div>
+  </div>
+</section>
+
+<!-- REVIEW -->
+<section id="v-review" hidden>
+  <div id="rvPlay">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="rv-top"><span class="chip" id="rvTag">Review</span><span class="muted" id="rvLeft"></span></div>
+      <div class="flash">
+        <div class="f-front"><div class="f-word" id="fFront"></div><button class="speak" id="fSpeak" aria-label="Hear the Croatian"></button></div>
+        <div class="f-back" id="fBack" hidden>
+          <div class="f-ans" id="fAns"></div>
+          <div class="f-note" id="fNote"></div>
+        </div>
+      </div>
+      <button class="btn wide" id="showBtn">Show answer</button>
+      <div class="rates" id="rates" hidden>
+        <button class="rate again" data-r="0">Again<small>now</small></button>
+        <button class="rate" data-r="1">Hard<small id="ivH"></small></button>
+        <button class="rate good" data-r="2">Good<small id="ivG"></small></button>
+        <button class="rate" data-r="3">Easy<small id="ivE"></small></button>
+      </div>
+      <div class="keys">Keyboard: Space to flip, 1–4 to rate, P to hear it</div>
+    </div>
+  </div>
+  <div class="panel done" id="rvDone" hidden>
+    <div class="eyebrow">Session finished</div>
+    <h2>Gotovo!</h2>
+    <p class="muted" id="doneMsg"></p>
+    <div class="row" style="width:100%">
+      <button class="btn ghost" id="practiceBtn" hidden>Practise this deck anyway</button>
+      <button class="btn ghost" data-go="quiz">Take a quiz</button>
+      <button class="btn" data-go="today">Back to today</button>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="v-quiz" hidden>
+  <div class="panel" id="qSetup" style="display:flex;flex-direction:column;gap:16px">
+    <div><h2 style="font-size:28px">Quick quiz</h2><p class="muted" style="margin:4px 0 0">Ten questions. Quizzes don't change your flashcard schedule.</p></div>
+    <div class="row">
+      <div class="field"><label for="qDeck">Topic</label><select id="qDeck"></select></div>
+      <div class="field"><label for="qDir">Direction</label>
+        <select id="qDir"><option value="hr-en">Croatian → English</option><option value="en-hr">English → Croatian</option><option value="mix">Mixed</option></select></div>
+      <div class="field"><label for="qMode">Answer by</label>
+        <select id="qMode"><option value="choice">Multiple choice</option><option value="type">Typing</option></select></div>
+    </div>
+    <button class="btn wide" id="qStart">Start quiz</button>
+  </div>
+
+  <div id="qPlay" hidden style="display:flex;flex-direction:column;gap:16px">
+    <div class="qhead"><span class="eyebrow" id="qAsk"></span><span class="muted" id="qCount"></span></div>
+    <div class="bar"><i id="qBar" style="width:0"></i></div>
+    <div class="panel" style="display:flex;flex-direction:column;align-items:center;gap:12px;padding-block:28px">
+      <div class="qprompt" id="qPrompt"></div>
+      <button class="speak" id="qSpeak" aria-label="Hear the Croatian"></button>
+    </div>
+    <div class="choices" id="qChoices"></div>
+    <form id="qTypeForm" class="row" hidden>
+      <input type="text" id="qInput" autocomplete="off" autocapitalize="off" spellcheck="false" style="flex:1 1 220px" placeholder="Type your answer">
+      <button class="btn" type="submit" id="qCheck">Check</button>
+    </form>
+    <div class="row" id="qKeysRow" hidden>
+      <span class="muted" style="font-size:14px;align-self:center">Tap to insert:</span>
+      <span class="row" style="gap:6px" id="qKeys"></span>
+    </div>
+    <div class="fb" id="qFb" hidden></div>
+    <button class="btn wide" id="qNext" hidden>Next</button>
+  </div>
+
+  <div class="panel done" id="qEnd" hidden>
+    <div class="eyebrow">Your score</div>
+    <h2 id="qScore"></h2>
+    <p class="muted" id="qVerdict"></p>
+    <div class="missed" id="qMissed"></div>
+    <div class="row" style="width:100%">
+      <button class="btn ghost" id="qSettings">Change settings</button>
+      <button class="btn" id="qAgain">Another round</button>
+    </div>
+  </div>
+</section>
+
+<!-- PHRASEBOOK -->
+<section id="v-phrases" hidden>
+  <div><h2 style="font-size:28px">Phrasebook</h2><p class="muted" style="margin:4px 0 0">Phrases you can use straight away. They're also a flashcard deck.</p></div>
+  <input type="search" id="pSearch" placeholder="Search in English or Croatian" aria-label="Search phrases">
+  <div id="pList" style="display:flex;flex-direction:column;gap:20px"></div>
+</section>
+
+<!-- SOUNDS -->
+<section id="v-sounds" hidden>
+  <div class="prose">
+    <h2 style="font-size:28px">Abeceda · the alphabet</h2>
+    <p class="muted" style="margin-top:4px">Croatian is spelled the way it sounds: one letter, one sound, every letter pronounced. Learn these 30 letters and you can read anything aloud. Tap a letter to hear its example word.</p>
+  </div>
+  <p class="legend"><b>Red letters</b> are the ones English speakers need to learn. Lj, Nj and Dž count as single letters. Q, W, X and Y appear only in foreign words.</p>
+  <div class="abc" id="abc"></div>
+  <div class="panel prose">
+    <h3 style="font-size:22px;margin-bottom:8px">Five tips for sounding right</h3>
+    <p><b>Vowels are short and pure.</b> a as in <i>father</i>, e as in <i>bed</i>, i as in <i>machine</i>, o as in <i>more</i>, u as in <i>food</i>. They never glide the way English vowels do.</p>
+    <p><b>Roll the r.</b> It can even act as a vowel: <i>trg</i> (square), <i>prst</i> (finger), the island of <i>Krk</i>.</p>
+    <p><b>Č vs Ć.</b> Č is hard, tongue back (<i>čaj</i>). Ć is soft, tongue forward (<i>kuća</i>). Many Croatians blur them, so don't worry too much.</p>
+    <p><b>Stress usually falls early</b>, often on the first syllable, and never on the last syllable of a longer word: <b>HR</b>vatska, <b>do</b>bar dan.</p>
+    <p><b>J is always a y sound.</b> <i>Jaje</i> (egg) is "YAH-yeh".</p>
+  </div>
+</section>
+
+<!-- GRAMMAR -->
+<section id="v-grammar" hidden>
+  <div class="prose">
+    <h2 style="font-size:28px">Grammar essentials</h2>
+    <p class="muted" style="margin-top:4px">Just enough grammar to understand what you hear and build simple sentences.</p>
+  </div>
+
+  <div class="panel prose">
+    <h3 style="font-size:22px;margin-bottom:8px">Biti · to be</h3>
+    <p>You will use this verb constantly. The short forms never start a sentence: say <i>Ja sam Ana</i> or <i>Ana sam</i>, not <i>Sam Ana</i>.</p>
+    <div class="tbl"><table>
+      <tr><th>Person</th><th>Am / is / are</th><th>Am not</th></tr>
+      <tr><td>ja (I)</td><td class="hr">sam</td><td class="hr">nisam</td></tr>
+      <tr><td>ti (you)</td><td class="hr">si</td><td class="hr">nisi</td></tr>
+      <tr><td>on / ona / ono</td><td class="hr">je</td><td class="hr">nije</td></tr>
+      <tr><td>mi (we)</td><td class="hr">smo</td><td class="hr">nismo</td></tr>
+      <tr><td>vi (you all / formal)</td><td class="hr">ste</td><td class="hr">niste</td></tr>
+      <tr><td>oni / one / ona</td><td class="hr">su</td><td class="hr">nisu</td></tr>
+    </table></div>
+  </div>
+
+  <div class="panel prose">
+    <h3 style="font-size:22px;margin-bottom:8px">Present tense: three patterns</h3>
+    <p>Most verbs follow one of three endings. Pronouns are usually dropped, because the ending already tells you who: <i>Govorim engleski</i> means "I speak English".</p>
+    <div class="tbl"><table>
+      <tr><th></th><th>gledati (watch)</th><th>govoriti (speak)</th><th>piti (drink)</th></tr>
+      <tr><td>ja</td><td class="hr">gled<span class="end">am</span></td><td class="hr">govor<span class="end">im</span></td><td class="hr">pij<span class="end">em</span></td></tr>
+      <tr><td>ti</td><td class="hr">gled<span class="end">aš</span></td><td class="hr">govor<span class="end">iš</span></td><td class="hr">pij<span class="end">eš</span></td></tr>
+      <tr><td>on/ona</td><td class="hr">gled<span class="end">a</span></td><td class="hr">govor<span class="end">i</span></td><td class="hr">pij<span class="end">e</span></td></tr>
+      <tr><td>mi</td><td class="hr">gled<span class="end">amo</span></td><td class="hr">govor<span class="end">imo</span></td><td class="hr">pij<span class="end">emo</span></td></tr>
+      <tr><td>vi</td><td class="hr">gled<span class="end">ate</span></td><td class="hr">govor<span class="end">ite</span></td><td class="hr">pij<span class="end">ete</span></td></tr>
+      <tr><td>oni</td><td class="hr">gled<span class="end">aju</span></td><td class="hr">govor<span class="end">e</span></td><td class="hr">pij<span class="end">u</span></td></tr>
+    </table></div>
+    <p style="margin-top:10px">To make a verb negative, put <i>ne</i> in front: <i>Ne razumijem</i> (I don't understand). Three verbs merge with it: <i>nisam</i> (I'm not), <i>nemam</i> (I don't have), <i>neću</i> (I won't / don't want).</p>
+  </div>
+
+  <div class="panel prose">
+    <h3 style="font-size:22px;margin-bottom:8px">Gender: look at the ending</h3>
+    <div class="tbl"><table>
+      <tr><th>Gender</th><th>Usually ends in</th><th>Examples</th></tr>
+      <tr><td>Masculine</td><td>a consonant</td><td class="hr">grad, kruh, otok</td></tr>
+      <tr><td>Feminine</td><td><span class="end">-a</span></td><td class="hr">kava, plaža, žena</td></tr>
+      <tr><td>Neuter</td><td><span class="end">-o</span> or <span class="end">-e</span></td><td class="hr">pivo, vino, more</td></tr>
+    </table></div>
+    <p style="margin-top:10px">Adjectives match the noun: <i>dobar grad</i>, <i>dobra kava</i>, <i>dobro vino</i>.</p>
+  </div>
+
+  <div class="panel prose">
+    <h3 style="font-size:22px;margin-bottom:8px">The seven cases</h3>
+    <p>Croatian nouns change their ending depending on their role in the sentence. Don't memorise the tables yet. Learn to notice them. Here is <i>žena</i> (woman) and <i>grad</i> (city):</p>
+    <div class="tbl"><table>
+      <tr><th>Case</th><th>Used for</th><th>žena</th><th>grad</th></tr>
+      <tr><td>Nominative</td><td>the subject</td><td class="hr">žen<span class="end">a</span></td><td class="hr">grad</td></tr>
+      <tr><td>Genitive</td><td>of, from, without, amounts</td><td class="hr">žen<span class="end">e</span></td><td class="hr">grad<span class="end">a</span></td></tr>
+      <tr><td>Dative</td><td>to, for (someone)</td><td class="hr">žen<span class="end">i</span></td><td class="hr">grad<span class="end">u</span></td></tr>
+      <tr><td>Accusative</td><td>the object, going to</td><td class="hr">žen<span class="end">u</span></td><td class="hr">grad</td></tr>
+      <tr><td>Vocative</td><td>calling someone</td><td class="hr">žen<span class="end">o</span></td><td class="hr">grad<span class="end">e</span></td></tr>
+      <tr><td>Locative</td><td>in, at, about</td><td class="hr">žen<span class="end">i</span></td><td class="hr">grad<span class="end">u</span></td></tr>
+      <tr><td>Instrumental</td><td>with, by means of</td><td class="hr">žen<span class="end">om</span></td><td class="hr">grad<span class="end">om</span></td></tr>
+    </table></div>
+    <p style="margin-top:10px"><b>The one to learn first:</b> when ordering, feminine <i>-a</i> becomes <i>-u</i>. <i>Kava</i> becomes <i>Jednu kavu, molim</i>, and <i>karta</i> becomes <i>Jednu kartu za Split</i>.</p>
+  </div>
+
+  <div class="panel prose">
+    <h3 style="font-size:22px;margin-bottom:8px">Ti or Vi?</h3>
+    <p>Use <i>ti</i> with friends, family, children and people your age in casual settings. Use <i>Vi</i> with strangers, older people, shop and restaurant staff. If you're unsure, use <i>Vi</i>. You'll hear <i>Kako ste?</i> (formal) and <i>Kako si?</i> (informal), and <i>Izvolite</i> from anyone serving you.</p>
+    <p>To ask a yes/no question, put the verb first and add <i>li</i>: <i>Govorite li engleski?</i> (Do you speak English?), <i>Imate li sobu?</i> (Do you have a room?). With "to be", use <i>je li</i>: <i>Je li daleko?</i> (Is it far?).</p>
+  </div>
+</section>
+
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const DECKS=[
+ {id:'pozdravi',hr:'Pozdravi',en:'Greetings & basics',cards:[
+  ['bok','hi / bye','Informal and very common.'],
+  ['dobar dan','good day / hello','Polite, any time of day.'],
+  ['dobro jutro','good morning'],
+  ['dobra večer','good evening'],
+  ['laku noć','good night'],
+  ['doviđenja','goodbye','Polite. Literally "until we see again".'],
+  ['hvala','thank you / thanks'],
+  ['hvala lijepa','thank you very much','Literally "beautiful thanks".'],
+  ['molim','please / you\'re welcome','Also "pardon?" when you didn\'t catch something.'],
+  ['da','yes'],
+  ['ne','no'],
+  ['oprostite','excuse me / sorry','Formal. To a friend: oprosti.'],
+  ['izvolite','here you are / how can I help','What shop and café staff say to you.'],
+  ['kako si?','how are you?','Informal.'],
+  ['kako ste?','how are you?','Formal, or to several people.'],
+  ['dobro sam','I\'m fine / I\'m good'],
+  ['drago mi je','nice to meet you','Literally "it is dear to me".'],
+  ['zovem se ...','my name is ...','Literally "I call myself".'],
+  ['može','okay / sure','Literally "it can". You\'ll hear it all day.'],
+  ['živjeli!','cheers!','Literally "may you live".']
+ ]},
+ {id:'brojevi',hr:'Brojevi',en:'Numbers',cards:[
+  ['jedan','one / 1'],['dva','two / 2'],['tri','three / 3'],['četiri','four / 4'],['pet','five / 5'],
+  ['šest','six / 6'],['sedam','seven / 7'],['osam','eight / 8'],['devet','nine / 9'],['deset','ten / 10'],
+  ['jedanaest','eleven / 11','Literally "one-on-ten".'],['dvanaest','twelve / 12'],['dvadeset','twenty / 20'],
+  ['pedeset','fifty / 50'],['sto','hundred / 100'],['tisuća','thousand / 1000']
+ ]},
+ {id:'hrana',hr:'Hrana i piće',en:'Food & drink',cards:[
+  ['voda','water'],['kruh','bread'],['kava','coffee','Order with "jednu kavu, molim".'],['čaj','tea'],
+  ['pivo','beer'],['vino','wine','Red wine is crno vino, literally "black wine".'],['mlijeko','milk'],
+  ['sir','cheese','Paški sir from the island of Pag is famous.'],['riba','fish'],['meso','meat'],['jaje','egg'],
+  ['juha','soup'],['sladoled','ice cream'],['voće','fruit'],['povrće','vegetables'],
+  ['jelovnik','menu'],['račun','bill / check'],['doručak','breakfast'],['ručak','lunch'],['večera','dinner'],
+  ['ukusno','delicious / tasty']
+ ]},
+ {id:'putovanje',hr:'Putovanje',en:'Travel & places',cards:[
+  ['grad','city / town'],['more','sea'],['plaža','beach'],['otok','island','Croatia has over a thousand.'],
+  ['ulica','street'],['trgovina','shop / store'],['tržnica','market','The open-air produce market.'],
+  ['kolodvor','station','Autobusni kolodvor is the bus station.'],['zračna luka','airport','Literally "air port".'],
+  ['soba','room'],['ljekarna','pharmacy'],['bolnica','hospital'],['autobus','bus'],['vlak','train'],
+  ['brod','boat / ship'],['trajekt','ferry'],['karta','ticket / map'],['lijevo','left'],['desno','right'],
+  ['ravno','straight ahead'],['blizu','near / close'],['daleko','far']
+ ]},
+ {id:'vrijeme',hr:'Dani i vrijeme',en:'Days & time',cards:[
+  ['danas','today'],['sutra','tomorrow'],['jučer','yesterday'],['sada','now','Also short: sad.'],
+  ['ponedjeljak','Monday','Literally "after Sunday".'],['utorak','Tuesday','From "second".'],
+  ['srijeda','Wednesday','From "middle".'],['četvrtak','Thursday','From "fourth".'],['petak','Friday','From "fifth".'],
+  ['subota','Saturday'],['nedjelja','Sunday','Literally "no work".'],['dan','day'],['tjedan','week'],
+  ['mjesec','month','Also means "moon".'],['godina','year'],['sat','hour / clock'],
+  ['vrijeme','time / weather','One word for both.']
+ ]},
+ {id:'ljudi',hr:'Ljudi',en:'People & family',cards:[
+  ['mama','mom / mum'],['tata','dad'],['majka','mother'],['otac','father'],['brat','brother'],['sestra','sister'],
+  ['sin','son'],['kći','daughter'],['muž','husband'],['žena','woman / wife'],['čovjek','person / man','Plural: ljudi (people).'],
+  ['dijete','child','Plural: djeca.'],['prijatelj','friend','Male. A female friend is prijateljica.'],['prijateljica','friend (female)']
+ ]},
+ {id:'glagoli',hr:'Glagoli',en:'Everyday verbs',cards:[
+  ['biti','to be','ja sam = I am'],['imati','to have','imam = I have'],['ići','to go','idem = I go'],
+  ['htjeti','to want','hoću = I want. Politer: želio bih / željela bih (I would like).'],
+  ['jesti','to eat','jedem = I eat'],['piti','to drink','pijem = I drink'],['govoriti','to speak','govorim = I speak'],
+  ['razumjeti','to understand','razumijem = I understand'],['znati','to know','znam = I know'],['vidjeti','to see','vidim = I see'],
+  ['raditi','to work / to do','radim = I work'],['živjeti','to live','živim = I live'],['voljeti','to love / to like','volim = I love'],
+  ['trebati','to need','trebam = I need'],['platiti','to pay','platim = I pay'],['kupiti','to buy','kupim = I buy'],
+  ['spavati','to sleep','spavam = I sleep']
+ ]},
+ {id:'opisi',hr:'Opisi',en:'Describing things',cards:[
+  ['dobar','good'],['loš','bad'],['velik','big'],['mali','small / little'],['lijep','beautiful / nice'],
+  ['nov','new'],['star','old'],['skup','expensive'],['jeftin','cheap'],['toplo','warm','It\'s warm: toplo je.'],
+  ['hladno','cold','It\'s cold: hladno je.'],['crven','red'],['plav','blue','Also "blond".'],['zelen','green'],
+  ['žut','yellow'],['bijel','white'],['crn','black']
+ ]},
+ {id:'pitanja',hr:'Pitanja',en:'Question words',cards:[
+  ['tko','who'],['što','what','Further east you\'ll hear šta.'],['gdje','where'],['kada','when','Also short: kad.'],
+  ['zašto','why'],['kako','how'],['koliko','how much / how many'],['koji','which']
+ ]}
+];
+
+const PHRASES=[
+ {g:'At the café & restaurant',items:[
+  ['Jednu kavu, molim.','One coffee, please.','Kava becomes kavu when ordered (accusative).'],
+  ['Račun, molim.','The bill, please.'],
+  ['Imate li jelovnik na engleskom?','Do you have a menu in English?'],
+  ['Što preporučujete?','What do you recommend?'],
+  ['Bez mesa, molim.','Without meat, please.'],
+  ['Bilo je odlično!','It was excellent!']
+ ]},
+ {g:'Getting around',items:[
+  ['Gdje je WC?','Where is the toilet?','WC is said "ve-tse".'],
+  ['Koliko košta?','How much does it cost?'],
+  ['Jednu kartu za Split, molim.','One ticket to Split, please.'],
+  ['Kada polazi trajekt?','When does the ferry leave?'],
+  ['Je li daleko?','Is it far?']
+ ]},
+ {g:'Conversation',items:[
+  ['Govorite li engleski?','Do you speak English?'],
+  ['Ne razumijem.','I don\'t understand.'],
+  ['Polako, molim.','Slowly, please.'],
+  ['Možete li ponoviti?','Can you repeat that?'],
+  ['Kako se kaže ... na hrvatskom?','How do you say ... in Croatian?'],
+  ['Učim hrvatski.','I\'m learning Croatian.','People will love hearing this.'],
+  ['Ne znam.','I don\'t know.'],
+  ['Nema problema.','No problem.'],
+  ['Vidimo se!','See you!'],
+  ['Sretno!','Good luck!'],
+  ['Pomalo!','Take it easy!','The Dalmatian motto: slowly, little by little.']
+ ]},
+ {g:'If you need help',items:[
+  ['Trebam pomoć.','I need help.'],
+  ['Upomoć!','Help!'],
+  ['Zovite liječnika!','Call a doctor!'],
+  ['Izgubio sam se.','I\'m lost.','Said by a man. A woman says: Izgubila sam se.']
+ ]}
+];
+DECKS.push({id:'fraze',hr:'Fraze',en:'Useful phrases',cards:PHRASES.flatMap(p=>p.items)});
+
+const ALPHABET=[
+ ['A','a in father','auto','car'],['B','b','brod','boat'],['C','ts in cats','cvijet','flower',1],
+ ['Č','ch in church (hard)','čaj','tea',1],['Ć','softer ch, like t in British "tune"','kuća','house',1],
+ ['D','d','dan','day'],['Dž','j in jungle (hard)','džep','pocket',1],['Đ','softer j, like d in British "duke"','rođendan','birthday',1],
+ ['E','e in bed','more','sea'],['F','f','fotografija','photo'],['G','g in go, always hard','grad','city'],
+ ['H','ch in Scottish loch, softly','hvala','thanks',1],['I','ee in see','riba','fish'],['J','y in yes','jaje','egg',1],
+ ['K','k','kava','coffee'],['L','l','lijevo','left'],['Lj','lli in million','ljubav','love',1],['M','m','mama','mom'],
+ ['N','n','ne','no'],['Nj','ny in canyon','konj','horse',1],['O','o in more, short','otok','island'],['P','p','pivo','beer'],
+ ['R','rolled; can act as a vowel','Krk','an island',1],['S','s in sun, never z','sir','cheese'],['Š','sh in shoe','šest','six',1],
+ ['T','t','tri','three'],['U','oo in food','ulica','street'],['V','v','vino','wine'],['Z','z in zoo','zelen','green'],
+ ['Ž','s in pleasure','žut','yellow',1]
+];
+
+const ALL=DECKS.flatMap(d=>d.cards.map(c=>({id:d.id+':'+c[0],deck:d.id,hr:c[0],en:c[1],note:c[2]||''})));
+const DECK_BY=Object.fromEntries(DECKS.map(d=>[d.id,d]));
+const INTERVALS=[0,1,2,4,8,16,32];
+const NEW_PER_DAY=12;
+const KEY='ucimo-hr-v1';
+const SPEAKER='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4z" fill="currentColor"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const today=()=>{const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*6e4)/864e5)};
+
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.cards)return s}catch(e){}
+  return {cards:{},streak:{last:null,count:0},newToday:{date:null,count:0},settings:{enFirst:false}};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+let S=load();
+
+let toastTimer;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,3200)}
+
+/* speech */
+let voice=null;
+function pickVoice(){
+  if(!('speechSynthesis' in window))return;
+  const vs=speechSynthesis.getVoices();
+  voice=vs.find(v=>/^hr/i.test(v.lang))||vs.find(v=>/^(bs|sr)/i.test(v.lang))||null;
+}
+if('speechSynthesis' in window){pickVoice();speechSynthesis.addEventListener?.('voiceschanged',pickVoice)}
+function speak(text){
+  if(!('speechSynthesis' in window)){toast('This browser can\'t play audio for words.');return}
+  if(!voice&&speechSynthesis.getVoices().length){toast('No Croatian voice on this device. Add one in your system\'s speech settings, or try Chrome.');return}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/\.\.\./g,'').trim());
+  if(voice)u.voice=voice;
+  u.lang=voice?voice.lang:'hr-HR';u.rate=.85;
+  speechSynthesis.speak(u);
+}
+document.querySelectorAll('.speak').forEach(b=>b.innerHTML=SPEAKER);
+
+/* navigation */
+const VIEWS=['today','review','quiz','phrases','sounds','grammar'];
+function show(v){
+  // a finished session shouldn't stop the Flashcards tab from starting a new one
+  if(v!=='review'&&sess&&sess.done)sess=null;
+  VIEWS.forEach(x=>{$('#v-'+x).hidden=x!==v});
+  document.querySelectorAll('.tab').forEach(t=>{
+    if(t.dataset.v===v){t.setAttribute('aria-current','page');t.scrollIntoView?.({block:'nearest',inline:'nearest'})}
+    else t.removeAttribute('aria-current');
+  });
+  if(v==='today')renderToday();
+  window.scrollTo(0,0);
+  try{history.replaceState(null,'','#'+v)}catch(e){}
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  if(t.dataset.v==='review'&&!sess)startReview(null);else show(t.dataset.v);
+}));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.go)));
+
+/* today */
+function stateOf(c){return S.cards[c.id]}
+function newUsed(){return S.newToday.date===today()?S.newToday.count:0}
+function renderToday(){
+  const t=today(),h=new Date().getHours();
+  $('#greet').textContent=h<11?'Dobro jutro!':h<18?'Dobar dan!':'Dobra večer!';
+  const days=['nedjelja','ponedjeljak','utorak','srijeda','četvrtak','petak','subota'];
+  const d=new Date();$('#dateLine').textContent=`Danas je ${days[d.getDay()]} · ${d.toLocaleDateString('en-GB',{day:'numeric',month:'long'})}`;
+  const due=ALL.filter(c=>stateOf(c)&&stateOf(c).due<=t).length;
+  const unseen=ALL.filter(c=>!stateOf(c)).length;
+  const fresh=Math.min(unseen,Math.max(0,NEW_PER_DAY-newUsed()));
+  const solid=ALL.filter(c=>stateOf(c)&&stateOf(c).box>=3).length;
+  $('#stDue').textContent=due;$('#stNew').textContent=fresh;$('#stSolid').textContent=solid;
+  $('#stSolidLbl').textContent=`of ${ALL.length} solid`;
+  $('#stStreak').textContent=S.streak.last!==null&&S.streak.last>=t-1?S.streak.count:0;
+  const n=due+fresh,b=$('#startBtn');
+  b.textContent=n?`Start today's review · ${n} card${n===1?'':'s'}`:'All done for today. Dobro!';
+  b.disabled=!n;
+  $('#enFirst').checked=!!S.settings.enFirst;
+  const w=ALL[(t*7)%ALL.length];
+  $('#wHr').textContent=w.hr;$('#wEn').textContent=w.en;$('#wNote').textContent=w.note;
+  $('#wSpeak').onclick=()=>speak(w.hr);
+  $('#deckList').innerHTML=DECKS.map(dk=>{
+    const cs=ALL.filter(c=>c.deck===dk.id),st=cs.filter(c=>stateOf(c)).length,so=cs.filter(c=>stateOf(c)&&stateOf(c).box>=3).length,du=cs.filter(c=>stateOf(c)&&stateOf(c).due<=t).length;
+    return `<button class="deck" data-deck="${dk.id}"><span class="dn">${esc(dk.hr)}</span><span class="de">${esc(dk.en)}</span>
+      <span class="bar"><i style="width:${Math.round(so/cs.length*100)}%"></i></span>
+      <span class="dc">${st}/${cs.length} started · ${so} solid${du?` · ${du} due`:''}</span></button>`;
+  }).join('');
+  document.querySelectorAll('.deck').forEach(el=>el.addEventListener('click',()=>startReview(el.dataset.deck)));
+}
+$('#startBtn').addEventListener('click',()=>startReview(null));
+$('#enFirst').addEventListener('change',e=>{S.settings.enFirst=e.target.checked;save()});
+
+/* flashcards */
+let sess=null,cur=null,revealed=false;
+function startReview(deckId,cram){
+  const t=today(),pool=ALL.filter(c=>!deckId||c.deck===deckId);
+  let queue;
+  if(cram)queue=shuffle(pool);
+  else{
+    const due=shuffle(pool.filter(c=>stateOf(c)&&stateOf(c).due<=t));
+    const lim=deckId?10:Math.max(0,NEW_PER_DAY-newUsed());
+    queue=[...due,...pool.filter(c=>!stateOf(c)).slice(0,lim)];
+  }
+  sess={deck:deckId,cram:!!cram,queue,reviewed:0};
+  show('review');
+  nextCard();
+}
+function nextCard(){
+  if(!sess.queue.length)return finish();
+  $('#rvPlay').hidden=false;$('#rvDone').hidden=true;
+  cur=sess.queue.shift();revealed=false;
+  const enFirst=S.settings.enFirst,st=stateOf(cur);
+  $('#fFront').textContent=enFirst?cur.en:cur.hr;
+  $('#fAns').textContent=enFirst?cur.hr:cur.en;
+  $('#fNote').textContent=cur.note;
+  $('#fBack').hidden=true;$('#rates').hidden=true;$('#showBtn').hidden=false;
+  $('#fSpeak').hidden=enFirst;
+  const tag=$('#rvTag');
+  tag.textContent=sess.cram?'Practice':st?DECK_BY[cur.deck].hr:'New word';
+  tag.classList.toggle('new',!st&&!sess.cram);
+  $('#rvLeft').textContent=`${sess.queue.length+1} left`;
+  const box=st?st.box:0,fmt=n=>n===1?'1 day':n+' days';
+  $('#ivH').textContent='1 day';
+  $('#ivG').textContent=fmt(INTERVALS[Math.min(6,box+1)]);
+  $('#ivE').textContent=fmt(INTERVALS[Math.min(6,box+2)]);
+  $('#showBtn').focus({preventScroll:true});
+  if(!enFirst&&!st)speak(cur.hr);
+}
+function reveal(){
+  if(revealed)return;revealed=true;
+  $('#fBack').hidden=false;$('#rates').hidden=false;$('#showBtn').hidden=true;$('#fSpeak').hidden=false;
+  if(S.settings.enFirst)speak(cur.hr);
+}
+function rate(r){
+  if(!revealed)return;
+  const t=today();
+  if(!sess.cram){
+    let st=S.cards[cur.id];
+    if(!st){
+      st=S.cards[cur.id]={box:0,due:t};
+      if(S.newToday.date!==t)S.newToday={date:t,count:0};
+      S.newToday.count++;
+    }
+    if(r===0){st.box=0;st.due=t}
+    else if(r===1){st.box=Math.max(1,st.box);st.due=t+1}
+    else{st.box=Math.min(6,st.box+(r===3?2:1));st.due=t+INTERVALS[st.box]}
+    if(S.streak.last!==t){S.streak.count=S.streak.last===t-1?S.streak.count+1:1;S.streak.last=t}
+    save();
+  }
+  if(r===0)sess.queue.splice(Math.min(3,sess.queue.length),0,cur);
+  sess.reviewed++;
+  nextCard();
+}
+function finish(){
+  $('#rvPlay').hidden=true;$('#rvDone').hidden=false;
+  const d=sess.deck?DECK_BY[sess.deck]:null;
+  $('#doneMsg').textContent=sess.reviewed
+    ?`You went through ${sess.reviewed} card${sess.reviewed===1?'':'s'}${d?` in ${d.hr}`:''}. Come back tomorrow and the ones you know less well will be waiting.`
+    :d?`Nothing in ${d.hr} is due right now.`:'Nothing is due right now. Pick a deck on the Today tab to learn more words.';
+  $('#practiceBtn').hidden=!(d&&!sess.cram);
+  sess.done=true;
+}
+$('#showBtn').addEventListener('click',reveal);
+$('#fSpeak').addEventListener('click',()=>speak(cur.hr));
+document.querySelectorAll('.rate').forEach(b=>b.addEventListener('click',()=>rate(+b.dataset.r)));
+$('#practiceBtn').addEventListener('click',()=>startReview(sess.deck,true));
+document.addEventListener('keydown',e=>{
+  if($('#v-review').hidden||$('#rvPlay').hidden||/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key===' '||e.key==='Enter'){if(!revealed){e.preventDefault();reveal()}}
+  else if(/^[1-4]$/.test(e.key))rate(+e.key-1);
+  else if(e.key==='p'||e.key==='P')speak(cur.hr);
+});
+
+/* quiz */
+$('#qDeck').innerHTML='<option value="all">All topics</option>'+DECKS.map(d=>`<option value="${d.id}">${esc(d.hr)} · ${esc(d.en)}</option>`).join('');
+let qz=null;
+const norm=s=>s.toLowerCase().replace(/\(.*?\)/g,'').replace(/\.\.\./g,'').replace(/[.,!?¿¡"…]/g,'').replace(/\s+/g,' ').trim();
+const alts=s=>s.split(/\s*\/\s*/).map(norm).filter(Boolean);
+const plainA=s=>s.replace(/dž/g,'dz').replace(/đ/g,'dj').replace(/[čć]/g,'c').replace(/š/g,'s').replace(/ž/g,'z');
+const plainB=s=>plainA(s.replace(/đ/g,'d'));
+function check(given,answer){
+  const g=norm(given);if(!g)return 'bad';
+  const as=alts(answer).concat(norm(answer));
+  if(as.includes(g))return 'ok';
+  if(as.some(a=>plainA(a)===plainA(g)||plainB(a)===plainB(g)))return 'almost';
+  return 'bad';
+}
+function startQuiz(){
+  const deck=$('#qDeck').value;
+  const pool=ALL.filter(c=>deck==='all'||c.deck===deck);
+  qz={items:shuffle(pool).slice(0,10),i:0,score:0,missed:[],dir:$('#qDir').value,mode:$('#qMode').value};
+  $('#qSetup').hidden=true;$('#qEnd').hidden=true;$('#qPlay').hidden=false;
+  qRender();
+}
+function qRender(){
+  const c=qz.items[qz.i];
+  const toEn=qz.dir==='hr-en'||(qz.dir==='mix'&&Math.random()<.5);
+  qz.cur={c,toEn,answer:toEn?c.en:c.hr,answered:false};
+  $('#qAsk').textContent=toEn?'Translate into English':'Translate into Croatian';
+  $('#qCount').textContent=`${qz.i+1} / ${qz.items.length}`;
+  $('#qBar').style.width=(qz.i/qz.items.length*100)+'%';
+  $('#qPrompt').textContent=toEn?c.hr:c.en;
+  $('#qSpeak').hidden=!toEn;
+  $('#qFb').hidden=true;$('#qNext').hidden=true;
+  const typing=qz.mode==='type';
+  $('#qChoices').hidden=typing;$('#qTypeForm').hidden=!typing;$('#qKeysRow').hidden=!(typing&&!toEn);
+  if(typing){const i=$('#qInput');i.value='';i.disabled=false;$('#qCheck').disabled=false;i.focus()}
+  else{
+    let others=shuffle(ALL.filter(x=>x.deck===c.deck&&x.id!==c.id));
+    if(others.length<3)others=others.concat(shuffle(ALL.filter(x=>x.deck!==c.deck)));
+    const seen=new Set([qz.cur.answer]),opts=[c];
+    for(const o of others){const a=toEn?o.en:o.hr;if(!seen.has(a)){seen.add(a);opts.push(o)}if(opts.length===4)break}
+    $('#qChoices').innerHTML=shuffle(opts).map(o=>`<button class="choice" data-id="${esc(o.id)}">${esc(toEn?o.en:o.hr)}</button>`).join('');
+    document.querySelectorAll('.choice').forEach(b=>b.addEventListener('click',()=>{
+      if(qz.cur.answered)return;
+      const ok=b.dataset.id===c.id;
+      document.querySelectorAll('.choice').forEach(x=>{x.disabled=true;if(x.dataset.id===c.id)x.classList.add('right')});
+      if(!ok)b.classList.add('wrong');
+      qDone(ok?'ok':'bad');
+    }));
+  }
+}
+function qDone(result){
+  const q=qz.cur;q.answered=true;
+  if(result!=='bad')qz.score++;else qz.missed.push(q.c);
+  const fb=$('#qFb');fb.hidden=false;fb.className='fb '+result;
+  fb.textContent=result==='ok'?'Točno! Correct.':result==='almost'?`Almost! Watch the accents: ${q.answer}`:`Not quite. The answer is: ${q.answer}`;
+  if(q.toEn===false||result!=='bad')speak(q.c.hr);
+  const n=$('#qNext');n.hidden=false;n.textContent=qz.i+1<qz.items.length?'Next':'See your score';n.focus();
+}
+function qNext(){
+  qz.i++;
+  if(qz.i<qz.items.length)return qRender();
+  $('#qPlay').hidden=true;$('#qEnd').hidden=false;
+  const s=qz.score,n=qz.items.length;
+  $('#qScore').textContent=`${s} / ${n}`;
+  $('#qVerdict').textContent=s===n?'Savršeno! Perfect.':s>=n*.7?'Odlično! Excellent.':s>=n*.4?'Dobro! Good, keep going.':'Pomalo. Little by little, you\'ll get there.';
+  $('#qMissed').innerHTML=qz.missed.length?'<div class="eyebrow" style="border:0">Review these</div>'+qz.missed.map(c=>`<div><span style="font-family:var(--f-display)">${esc(c.hr)}</span><span class="muted">${esc(c.en)}</span></div>`).join(''):'';
+}
+$('#qStart').addEventListener('click',startQuiz);
+$('#qAgain').addEventListener('click',startQuiz);
+$('#qSettings').addEventListener('click',()=>{$('#qEnd').hidden=true;$('#qSetup').hidden=false});
+$('#qNext').addEventListener('click',qNext);
+$('#qSpeak').addEventListener('click',()=>speak(qz.cur.c.hr));
+$('#qTypeForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  if(qz.cur.answered)return qNext();
+  const i=$('#qInput');if(!i.value.trim())return;
+  i.disabled=true;$('#qCheck').disabled=true;
+  qDone(check(i.value,qz.cur.answer));
+});
+$('#qKeys').innerHTML=['č','ć','đ','š','ž'].map(k=>`<button type="button" class="speak" style="font-family:var(--f-display);font-size:18px;color:var(--ink)" data-k="${k}">${k}</button>`).join('');
+document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
+  const i=$('#qInput');if(i.disabled)return;
+  const p=i.selectionStart??i.value.length;i.value=i.value.slice(0,p)+b.dataset.k+i.value.slice(i.selectionEnd??p);
+  i.focus();i.setSelectionRange(p+1,p+1);
+}));
+
+/* phrasebook */
+function renderPhrases(){
+  const q=norm($('#pSearch').value);
+  const html=PHRASES.map(g=>{
+    const items=g.items.filter(p=>!q||norm(p[0]+' '+p[1]).includes(q)||plainB(norm(p[0])).includes(plainB(q)));
+    if(!items.length)return '';
+    return `<div class="panel group"><h3>${esc(g.g)}</h3>${items.map(p=>`<div class="phrase"><div class="p"><div class="hr">${esc(p[0])}</div><div class="en">${esc(p[1])}</div>${p[2]?`<div class="nt">${esc(p[2])}</div>`:''}</div><button class="speak" data-say="${esc(p[0])}" aria-label="Hear it">${SPEAKER}</button></div>`).join('')}</div>`;
+  }).join('');
+  $('#pList').innerHTML=html||'<p class="muted">No phrases match that search.</p>';
+}
+$('#pSearch').addEventListener('input',renderPhrases);
+$('#pList').addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)speak(b.dataset.say)});
+renderPhrases();
+
+/* alphabet */
+$('#abc').innerHTML=ALPHABET.map(([L,s,ex,gl,sp])=>`<button class="letter${sp?' special':''}" data-say="${esc(ex)}"><span class="L">${L} ${L.toLowerCase()}</span><span class="s">${esc(s)}</span><span class="ex"><b>${esc(ex)}</b> · ${esc(gl)}</span></button>`).join('');
+$('#abc').addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)speak(b.dataset.say)});
+
+/* boot */
+const start=(location.hash||'').slice(1);
+if(start==='review')startReview(null);else show(VIEWS.includes(start)?start:'today');
+</script>
+</body>
+</html>
